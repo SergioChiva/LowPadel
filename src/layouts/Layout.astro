@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<script src="/public/scripts/logo.js" defer></script>
+		<title>LowPádel</title>
+	</head>
+	<body>
+		<div id="loader">
+  			<img src="/public/Layout/logo.png" alt="Logo">
+		</div>
+		<header>
+
+			<a href="/" class="cabecera">
+				<img src="/public/Layout/logo.png" alt="Logo">
+			</a>
+			<nav>
+				<ul>
+					<li><a href="#">Nuestras Palas</a></li>
+					<li><a href="#">Ofertas exclusivas</a></li>
+					<li><a href="/contact">Contacto</a></li>
+					<li><a href="/about">Sobre nosotros</a></li>
+				</ul>
+			</nav>
+			<div class="sesion">
+				<a href="" class="registro">
+					Registrarse
+				</a>
+				<a href="" class="inicioSesion">
+					Iniciar Sesion
+				</a>
+			</div>	
+		</header>
+		
+		<slot />
+	</body>
+</html>
+
+<style>
+	/* Paleta de azules */
+:root {
+  --azul-oscuro: #003d83;
+  --azul: #1a73e8;
+  --azul-claro: #3badff;
+  --blanco: #ffffff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html{
+	background-color: var(--azul-oscuro);
+}
+
+#loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgb(170, 171, 255); /* fondo negro */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 1s ease; /* transición para desaparecer */
+  }
+
+  /* Logo */
+#loader img {
+	width: 600px; /* ajusta tamaño del logo */
+}
+
+  /* Cuando se oculta */
+#loader.hidden {
+	opacity: 0;
+	pointer-events: none;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: var(--azul-claro);
+  
+}
+
+header {
+  background-color: var(--azul-claro);
+  color: var(--blanco);
+  padding: 1rem 2rem;
+  text-align: center;
+  position: relative;
+}
+
+.cabecera img {
+  width: 300px;
+  margin-bottom: 20px;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 5rem;
+  justify-content: center;
+  font-size: 18pt;
+}
+
+nav a {
+  color: var(--blanco);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav a:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.sesion{
+	position: absolute;
+	top: 15%;
+	right: 2%;
+}
+
+.sesion a{
+	text-decoration: none;
+	color: white;
+	margin-right: 10px;
+}
+
+.registro{
+	border: solid 3px black;
+	padding: 10px;
+	border-radius: 20px;
+	background-color: #003d83;
+}
+
+.inicioSesion{
+	border: solid 3px black;
+	padding: 10px;
+	border-radius: 20px;
+	background-color: #2d00cf;
+}
+
+
+
+</style>
