@@ -19,7 +19,7 @@
 			</a>
 			<nav>
 				<ul>
-					<li><a href="#">Nuestras Palas</a></li>
+					<li><a href="/palas">Nuestras Palas</a></li>
 					<li><a href="#">Ofertas exclusivas</a></li>
 					<li><a href="/contact">Contacto</a></li>
 					<li><a href="/about">Sobre nosotros</a></li>
@@ -36,6 +36,11 @@
 		</header>
 		
 		<slot />
+
+		<footer>
+    		<p>Proyecto web de Sergio Chiva - No es una tienda real</p>
+  		</footer>
+
 	</body>
 </html>
 
@@ -100,7 +105,7 @@ header {
 
 .cabecera img {
   width: 300px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 nav ul {
@@ -149,6 +154,15 @@ nav a:hover {
 	background-color: #2d00cf;
 }
 
-
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #003d83;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+}
 
 </style>
