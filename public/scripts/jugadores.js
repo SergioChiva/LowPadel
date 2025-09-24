@@ -15,7 +15,7 @@ let jugadores =[
           "La Adidas Metalbone HDR es una de las palas más completas y avanzadas del mercado, diseñada especialmente para jugadores de nivel profesional y avanzado que buscan un equilibrio perfecto entre potencia y control. Su forma de diamante y el balance alto permiten imprimir una enorme fuerza en los remates y bandejas, convirtiéndola en una aliada ideal para los jugadores ofensivos que quieren dominar el juego desde la red. El marco incorpora la tecnología Octagonal Structure, que refuerza la rigidez de la pala para ofrecer una mayor durabilidad y estabilidad en cada golpe. Además, cuenta con el innovador Weight & Balance System, que permite personalizar el peso de la pala mediante tornillos ajustables, adaptándola al estilo de cada jugador: más ligera y manejable para el control, o más pesada para incrementar la potencia. Su superficie está fabricada con Carbon Aluminized 2 to 1, un carbono de alta calidad que asegura una salida de bola espectacular y una gran resistencia. La goma interior EVA Soft Performance aporta un tacto cómodo y excelente absorción de impactos, lo que mejora la precisión en golpes defensivos sin renunciar a la potencia. La Metalbone HDR es mucho más que una pala: es una herramienta de alto rendimiento pensada para quienes buscan llevar su juego al siguiente nivel, combinando innovación, personalización y un diseño agresivo que refleja su esencia competitiva.",
       },
       {
-        imagen: "/public/palas/pala-adidas-metalbone-pro-edt-2025-Photoroom.png",
+        imagen: "/public/palas/pala-adidas-metalbone-pro-edt.png",
         nombrePala: "Adidas Metalbone EDT",
         precio: "60$",
         descripcion:
@@ -90,25 +90,67 @@ let jugadores =[
     ],
   }
 ]
+
+
+
 jugadores.forEach(datos => {
-    let divJugador = document.createElement("div");
+  let divJugador = document.createElement("div");
 
-    datos.palas.forEach(info =>{
-        divJugador.innerHTML = `
-    <h2>Palas de ${datos.nombre}</h2>    
+  divJugador.innerHTML = `
+    <hr style="margin:50px 0; border: none; border-top: 2px solid #ddd;"> 
+    <h2 style="margin-top:20px; text-align:center; font-family:sans-serif; font-size:28px; color:#333;">
+      Palas de ${datos.nombre}
+    </h2>    
     <br>
-    <img src="${info.imagen}" alt="palaImg">
+  `;
 
-    `
+  datos.palas.forEach(info =>{
+    // Creamos el contenedor de la pala como un div normal
+    let card = document.createElement("div");
+    card.style.cssText = `
+      background:#fff; 
+      width:80%; 
+      max-width:500px;
+      margin: 40px auto; 
+      padding:25px; 
+      border-radius:20px; 
+      text-align:center;
+      box-shadow:0 6px 20px rgba(0,0,0,0.15);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    `;
 
+    // Imagen
+    card.innerHTML = `
+      <img src="${info.imagen}" alt="palaImg" style="
+        width:100%; 
+        max-width:350px; 
+        border-radius:15px; 
+        display:block; 
+        margin:0 auto 20px auto;
+      ">
+      <h3 style="font-family:sans-serif; font-size:20px; color:#444; margin-bottom:10px;">
+        ${info.nombrePala}
+      </h3>
+      
+      <p style="font-size:24px; color:#666; margin:0;">
+        ${info.precio}
+      </p>
+    `;
 
+    // Efecto hover con JS
+    card.addEventListener("mouseover", () => {
+      card.style.background = "#3fd6f1ff"; // gris clarito al pasar
+      card.style.boxShadow = "0 8px 25px rgba(0,0,0,0.25)";
+      card.style.color = "#fff";
+    });
+    card.addEventListener("mouseout", () => {
+      card.style.background = "#fff"; // vuelve a blanco
+      card.style.boxShadow = "0 6px 20px rgba(0,0,0,0.15)";
     });
 
+    divJugador.appendChild(card);
+  });
 
-
-
-
-    main.appendChild(divJugador);
-
-
+  main.appendChild(divJugador);
 });
