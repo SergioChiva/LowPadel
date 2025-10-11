@@ -1,0 +1,185 @@
+
+  <style>
+    :root {
+      --azul-oscuro: #003d83;
+      --azul: #1a73e8;
+      --azul-claro: #3badff;
+      --blanco: #ffffff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--azul-claro);
+      display: block;
+    }
+
+    .registro-container {
+      background: var(--azul-oscuro);
+      padding: 60px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      width: 350px;
+      color: var(--blanco);
+      text-align: center;
+      margin: 50px auto;
+    }
+
+    .registro-container h1 {
+      margin-bottom: 30px;
+      font-size: 28px;
+    }
+
+    .registro-container input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: none;
+      border-radius: 12px;
+      outline: none;
+      font-size: 16px;
+    }
+
+    .registro-container button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 25px;
+      background: var(--azul);
+      color: var(--blanco);
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .registro-container button:hover {
+      background: var(--azul-claro);
+      transform: translateY(-2px);
+    }
+
+    .registro-container p {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .registro-container a {
+      color: #ffeb3b;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .registro-container a:hover {
+      text-decoration: underline;
+    }
+
+    .error {
+      color: #ff4f4f;
+      font-size: 13px;
+      margin-top: -15px;
+      margin-bottom: 15px;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="registro-container">
+    <h1>Registrarse</h1>
+
+    <form id="formRegistro">
+      <input type="text" id="nombre" placeholder="Nombre completo" maxlength="40" />
+      <span id="errorNombre" class="error"></span>
+
+      <input type="text" id="nick" placeholder="Nick" maxlength="40" />
+      <span id="errorNick" class="error"></span>
+
+      <input type="email" id="email" placeholder="Correo electrónico" maxlength="50" />
+      <span id="errorEmail" class="error"></span>
+
+      <input type="password" id="password" placeholder="Contraseña" />
+      <span id="errorPassword" class="error"></span>
+
+      <label for="fotoPerfil" style="display:block; margin-bottom:10px; font-weight:bold;">Foto de perfil:</label>
+      <input type="file" id="fotoPerfil" name="fotoPerfil" accept="image/*" style="margin-bottom:20px;" />
+
+      <button type="submit" id="btnRegistro">Registrarse</button>
+    </form>
+
+    <p>¿Ya tienes cuenta? <a href="login.html">Inicia sesión aquí</a></p>
+  </div>
+
+  <!-- DIV DE PERFIL MEJORADO -->
+<div id="perfil" style="
+  display:none; 
+  max-width:400px; 
+  background:#003d83; 
+  color:white; 
+  padding:40px; 
+  border-radius:25px; 
+  text-align:center; 
+  box-shadow:0 12px 30px rgba(0,0,0,0.4);
+  font-family:'Segoe UI', sans-serif;
+  margin: 50px auto;
+">
+  <h2 style="margin-bottom:25px; font-size:28px;">Perfil personal</h2>
+
+  <!-- Foto de perfil -->
+  <div style="margin-bottom:25px;">
+    <img id="imagenPerfilRegistro" src="https://images.icon-icons.com/1378/PNG/512/avatardefault_92824.png" alt="Foto de perfil" style="
+      border-radius:50%; 
+      width:120px; 
+      height:120px; 
+      object-fit:cover; 
+      border:4px solid #1a73e8;
+    ">
+  </div>
+
+  <!-- Nombre y correo -->
+  <p style="margin-bottom:10px; font-size:18px;"><strong>Nombre:</strong> <span id="perfilNombre"></span></p>
+  <p style="margin-bottom:10px; font-size:18px;"><strong>Nick:</strong> <span id="perfilNick"></span></p>
+  <p style="margin-bottom:20px; font-size:18px;"><strong>Email:</strong> <span id="perfilEmail"></span></p>
+
+  <!-- Botones/links -->
+  <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap;">
+    <a href="#" style="
+      padding:10px 20px; 
+      background:#1a73e8; 
+      border-radius:15px; 
+      color:white; 
+      text-decoration:none; 
+      font-weight:bold;
+      transition:0.3s;
+    " onmouseover="this.style.background='#3badff'" onmouseout="this.style.background='#1a73e8'">Cambiar correo</a>
+
+    <a href="#" style="
+      padding:10px 20px; 
+      background:#1a73e8; 
+      border-radius:15px; 
+      color:white; 
+      text-decoration:none; 
+      font-weight:bold;
+      transition:0.3s;
+    " onmouseover="this.style.background='#3badff'" onmouseout="this.style.background='#1a73e8'">Cambiar contraseña</a>
+  </div>
+
+  <!-- Botón cerrar sesión -->
+  <button id="logout" style="
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  background: #ff4b4b;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+">
+  Cerrar sesión
+</button>
+
+</div>
+
+
+
+</body>
+</html>

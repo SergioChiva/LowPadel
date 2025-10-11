@@ -1,0 +1,151 @@
+<main class="jugador-container">
+  <section class="jugador-card">
+    <div class="jugador-foto">
+      <img
+        src="/public/Welcome/galan/galan1.png"
+        alt="Ale Galán"
+      />
+    </div>
+
+    <div class="jugador-info">
+      <h1>Alejandro Galán Romo</h1>
+      <h2>“Ale Galán”</h2>
+
+      <div class="jugador-datos">
+        <p><strong>Edad:</strong> 29 años</p>
+        <p><strong>Nacionalidad:</strong> Española 🇪🇸</p>
+        <p><strong>Posición:</strong> Revés</p>
+        <p><strong>Ranking actual:</strong> Nº 2 del mundo</p>
+      </div>
+
+      <p class="jugador-bio">
+        Ale Galán es uno de los jugadores de pádel más destacados del circuito profesional. 
+        Reconocido por su potencia, reflejos y agresividad en la pista, ha formado pareja 
+        con los mejores jugadores del mundo, siendo número uno en varias temporadas del World Padel Tour.
+      </p>
+
+      <div class="jugador-botones">
+        <a href="https://www.padelfip.com/es/player/alejandro-galan/">
+            <button class="btn-seguir">Seguir</button>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<style>
+
+    .jugador-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4rem 1rem;
+    background: var(--azul-claro);
+    color: var(--blanco);
+    }
+
+    .jugador-card {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: var(--azul);
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    overflow: hidden;
+    max-width: 1000px;
+    width: 100%;
+    transition: transform 0.3s ease;
+    }
+
+    .jugador-card:hover {
+    transform: translateY(-4px);
+    }
+
+    .jugador-foto {
+    flex: 1 1 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--azul-oscuro);
+    }
+
+    .jugador-foto img {
+    width: 100%;
+    height: 100%;
+    max-width: 350px;
+    object-fit: cover;
+    }
+
+    .jugador-info {
+    flex: 1 1 400px;
+    padding: 2rem;
+    text-align: left;
+    }
+
+    .jugador-info h1 {
+    font-size: 2rem;
+    margin-bottom: 0.2rem;
+    }
+
+    .jugador-info h2 {
+    font-size: 1.4rem;
+    color: #d4e6ff;
+    margin-bottom: 1.2rem;
+    }
+
+    .jugador-datos {
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+    }
+
+    .jugador-bio {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    color: #f1f5ff;
+    }
+
+    .jugador-botones {
+    display: flex;
+    gap: 1rem;
+    }
+
+    .jugador-botones button {
+    padding: 0.7rem 1.5rem;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+    }
+
+    .btn-seguir {
+    background: transparent;
+    border: 2px solid #fff;
+    color: #fff;
+    }
+
+    .btn-seguir:hover {
+    background: #0a2a5e;
+    }
+
+    /* Responsive */
+    @media (max-width: 800px) {
+    .jugador-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .jugador-foto img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .jugador-info {
+        padding: 1.5rem;
+    }
+    }
+
+</style>

@@ -7,12 +7,23 @@
 		<meta name="generator" content={Astro.generator} />
 		<script src="/public/scripts/logo.js" defer></script>
 		<script src="/public/scripts/nav.js" defer></script>
+    <script src="/public/scripts/usuario.js" defer></script>
+
 		<title>LowPádel</title>
 	</head>
 	<body>
+    <div id="top"></div>
 		<div id="loader">
   			<img src="/public/Layout/logo.png" alt="Logo">
 		</div>
+
+    <video autoplay muted loop id="fondo-video">
+      <source src="/public/videos/videoplayback.mp4" type="video/mp4">
+      Tu navegador no soporta video de fondo.
+    </video>
+
+    <div id="overlay"></div>
+
 		<header>
 
 			<a href="/" class="cabecera">
@@ -20,19 +31,24 @@
 			</a>
 
 			<div class="sesion">
-				<a href="" class="registro">
-					Registrarse
-				</a>
-				<a href="" class="inicioSesion">
-					Iniciar Sesion
+        <img id="imagenPerfil" src="https://images.icon-icons.com/1378/PNG/512/avatardefault_92824.png" alt="Foto de perfil" style="
+      border-radius:50%; 
+      width:90px; 
+      height:90px; 
+      object-fit:cover; 
+      border:4px solid #1a73e8;
+      margin-bottom: 5px;
+    "><br>
+				<a href="/register" class="registro">
+					Cuenta
 				</a>
 			</div>
-
+      
 		</header>
 		<nav>
 			<ul>
 				<li><a href="/palas">Nuestras Palas</a></li>
-				<li><a href="#">Ofertas exclusivas</a></li>
+				<li><a href="#">Noticias</a></li>
 				<li><a href="/contact">Contacto</a></li>
 				<li><a href="/about">Sobre nosotros</a></li>
 			</ul>
@@ -42,9 +58,15 @@
 		
 		<slot />
 
+<br><br><br>
 		<footer>
     		<p>Proyecto web de Sergio Chiva - No es una tienda real</p>
   		</footer>
+
+
+    <a href="#top" id="backToTop">↑</a>
+
+
 
 	</body>
 </html>
@@ -65,7 +87,7 @@
 }
 
 html{
-	background-color: var(--azul-oscuro);
+	background-color: var(--azul-claro);
 }
 
 #loader {
@@ -94,10 +116,30 @@ html{
 	pointer-events: none;
 }
 
+#fondo-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* ajusta el video para cubrir toda la pantalla */
+  z-index: -1; /* lo pone detrás de todo */
+  pointer-events: none; /* para que no interfiera con clics */
+}
+
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4); /* negro semitransparente */
+  z-index: 0;
+}
+
+
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: var(--azul-claro);
-  
+  font-family: 'Segoe UI', sans-serif;  
 }
 
 header {
@@ -143,25 +185,35 @@ nav a:hover {
 	right: 2%;
 }
 
-.sesion a{
-	text-decoration: none;
-	color: white;
-	margin-right: 10px;
+.sesion a {
+  text-decoration: none;
+  color: white;
+
+  font-weight: bold;
+  padding: 10px 10px;
+  border-radius: 25px;
+  transition: 0.3s;
+  cursor: pointer;
 }
 
-.registro{
-	border: solid 3px black;
-	padding: 10px;
-	border-radius: 20px;
-	background-color: #003d83;
+/* Registrarse */
+.registro {
+  background: #1a73e8;
 }
 
-.inicioSesion{
-	border: solid 3px black;
-	padding: 10px;
-	border-radius: 20px;
-	background-color: #2d00cf;
+.registro:hover {
+  background: #3badff;
 }
+
+/* Iniciar Sesión */
+.inicioSesion {
+  background: #2d00cf;
+}
+
+.inicioSesion:hover {
+  background: #6a00ff;
+}
+
 
 footer {
   position: fixed;
@@ -173,5 +225,29 @@ footer {
   text-align: center;
   padding: 1rem;
 }
+
+#backToTop {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: var(--azul);
+  color: var(--blanco);
+  font-size: 2rem;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  transition: background-color 0.3s;
+  z-index: 10000;
+}
+
+#backToTop:hover {
+  background-color: var(--azul-claro);
+}
+ 
 
 </style>

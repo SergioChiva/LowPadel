@@ -1,0 +1,104 @@
+.separador {
+  margin: 50px 0;
+  border: none;
+  border-top: 2px solid #ddd;
+}
+
+.titulo-jugador {
+  text-align: center;
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+/* Tarjeta de pala */
+.card-pala {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  margin: 30px auto;
+  max-width: 800px;
+  transition: all 0.3s ease;
+}
+
+.card-pala:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+}
+
+/* Contenido de la pala: imagen y descripción lado a lado */
+.contenido-pala {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 20px;
+}
+
+/* Imagen */
+.contenido-pala img {
+  width: 250px;
+  border-radius: 15px;
+  flex-shrink: 0;
+}
+
+/* Línea vertical */
+.info-pala {
+  border-left: 2px solid #ddd;
+  padding-left: 20px;
+  flex: 1;
+}
+
+/* Nombre y descripción */
+.info-pala h3 {
+  margin-top: 0;
+  font-size: 20px;
+  color: #222;
+}
+
+.info-pala .descripcion {
+  font-size: 14px;
+  color: #555;
+  margin: 15px 0;
+  text-align: justify;
+}
+
+.info-pala .precio {
+  font-size: 18px;
+  color: #00796b;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* Botón comprar */
+.btn-comprar {
+  background: #1a73e8;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.btn-comprar:hover {
+  background: #3badff;
+}
+
+/* Responsive */
+@media (max-width: 800px) {
+  .contenido-pala {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .info-pala {
+    border-left: none;
+    padding-left: 0;
+  }
+
+  .contenido-pala img {
+    margin: 0 auto;
+  }
+}
