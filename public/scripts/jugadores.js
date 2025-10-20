@@ -83,29 +83,34 @@ jugadores.forEach(datos => {
     let divJugador = document.createElement("div");
     divJugador.classList.add("seccion-jugador");
 
-    divJugador.innerHTML = `
-      <hr class="separador">
-      <h2 class="titulo-jugador">Palas de ${datos.nombre}</h2>
-    `;
+    // Título del jugador más limpio
+    divJugador.innerHTML = `<h2 class="titulo-jugador">${datos.nombre}</h2>`;
+
+    // **NUEVO:** Contenedor para las palas (usaremos CSS Grid aquí)
+    let palasContainer = document.createElement("div");
+    palasContainer.classList.add("palas-container"); 
 
     datos.palas.forEach(info => {
-      let card = document.createElement("div");
-      card.classList.add("card-pala");
+        let card = document.createElement("div");
+        card.classList.add("card-pala");
 
-      card.innerHTML = `
-        <div class="contenido-pala">
-          <img src="${info.imagen}" alt="${info.nombrePala}">
-          <div class="info-pala">
-            <h3>${info.nombrePala}</h3>
-            <p class="descripcion">${info.descripcion}</p>
-            <p class="precio">${info.precio}</p>
-            <button class="btn-comprar">Comprar</button>
-          </div>
-        </div>
-      `;
-
-      divJugador.appendChild(card);
+        // Estructura de la tarjeta mejorada
+        card.innerHTML = `
+            <div class="imagen-wrapper">
+                <img src="${info.imagen}" alt="${info.nombrePala}">
+            </div>
+            <div class="info-pala">
+                <h3 class="nombre-pala">${info.nombrePala}</h3>
+                <p class="precio">${info.precio}</p>
+                <p class="descripcion">${info.descripcion}</p>
+                <button class="btn-comprar">Comprar</button>
+            </div>
+        `;
+        
+        // Lo adjuntamos al nuevo contenedor de palas
+        palasContainer.appendChild(card);
     });
 
+    divJugador.appendChild(palasContainer); // Adjuntamos el contenedor de palas
     main.appendChild(divJugador);
-  });
+});
