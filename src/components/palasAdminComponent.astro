@@ -1,0 +1,737 @@
+<!-- 
+    🎯 SISTEMA DE ADMINISTRACIÓN DE PALAS
+    
+    📋 INSTRUCCIONES:
+    - Email: admin@lowpadel.com
+    - Contraseña: Admin01@
+    - Gestiona palas: añadir, editar precios/descripciones, eliminar
+-->
+
+<style>
+    :root {
+        --color-principal: #00c896;
+        --color-acento: #9333ea;
+        --primary-light: #6ee7b7;
+        --color-acento-light: #c084fc;
+    }
+
+    .admin-palas {
+        display: none;
+        max-width: 1400px;
+        margin: 0 auto 60px;
+        padding: 0 20px;
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .admin-palas.visible {
+        display: block;
+    }
+
+    .admin-palas-card {
+        background: linear-gradient(135deg, rgba(0, 200, 150, 0.1), rgba(147, 51, 234, 0.1));
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 2px solid rgba(0, 200, 150, 0.3);
+        border-radius: 24px;
+        padding: 40px;
+        box-shadow: 0 20px 60px rgba(0, 200, 150, 0.2);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .admin-palas-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 30px 80px rgba(0, 200, 150, 0.3);
+    }
+
+    .admin-palas-card h2 {
+        font-size: 2.5rem;
+        background: linear-gradient(135deg, #00c896, #9333ea);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 30px;
+        text-align: center;
+        font-weight: 700;
+    }
+
+    .admin-buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+    }
+
+    .btn-admin {
+        background: linear-gradient(135deg, #00c896, #6ee7b7);
+        color: #1a2332;
+        border: none;
+        padding: 16px 40px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 16px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 8px 20px rgba(0, 200, 150, 0.3);
+    }
+
+    .btn-admin.eliminar {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+        box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-admin:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 12px 30px rgba(0, 200, 150, 0.4);
+    }
+
+    .btn-admin.eliminar:hover {
+        box-shadow: 0 12px 30px rgba(239, 68, 68, 0.4);
+    }
+
+    .panel-form {
+        display: none;
+        margin-top: 30px;
+        animation: slideDown 0.4s ease-out;
+    }
+
+    .panel-form.visible {
+        display: block;
+    }
+
+    .admin-form {
+        background: rgba(26, 35, 50, 0.6);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(0, 200, 150, 0.2);
+        border-radius: 20px;
+        padding: 35px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    label {
+        color: #6ee7b7;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    input[type="text"],
+    input[type="file"],
+    textarea,
+    select {
+        background: rgba(26, 35, 50, 0.8);
+        border: 2px solid rgba(0, 200, 150, 0.3);
+        border-radius: 12px;
+        padding: 14px 18px;
+        color: white;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        font-family: inherit;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus,
+    select:focus {
+        outline: none;
+        border-color: #00c896;
+        box-shadow: 0 0 20px rgba(0, 200, 150, 0.3);
+        transform: translateY(-2px);
+    }
+
+    textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    input[type="file"] {
+        cursor: pointer;
+        padding: 12px;
+    }
+
+    input[type="file"]::file-selector-button {
+        background: linear-gradient(135deg, #00c896, #6ee7b7);
+        color: #1a2332;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        margin-right: 15px;
+        transition: all 0.3s ease;
+    }
+
+    input[type="file"]::file-selector-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(0, 200, 150, 0.4);
+    }
+
+    .preview-container {
+        display: none;
+        text-align: center;
+        margin-top: 15px;
+    }
+
+    .preview-container.visible {
+        display: block;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .preview-image {
+        max-width: 200px;
+        max-height: 200px;
+        border-radius: 16px;
+        border: 3px solid #00c896;
+        box-shadow: 0 10px 30px rgba(0, 200, 150, 0.3);
+    }
+
+    .form-buttons {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        margin-top: 10px;
+    }
+
+    .btn-form {
+        background: linear-gradient(135deg, #9333ea, #c084fc);
+        color: white;
+        border: none;
+        padding: 14px 30px;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 6px 15px rgba(147, 51, 234, 0.3);
+    }
+
+    .btn-form:hover {
+        transform: translateY(-3px) scale(1.03);
+        box-shadow: 0 10px 25px rgba(147, 51, 234, 0.4);
+    }
+
+    .btn-reset {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        box-shadow: 0 6px 15px rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-reset:hover {
+        box-shadow: 0 10px 25px rgba(239, 68, 68, 0.4);
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            max-height: 0;
+        }
+        to {
+            opacity: 1;
+            max-height: 2000px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .admin-palas-card {
+            padding: 25px;
+        }
+
+        .admin-palas-card h2 {
+            font-size: 2rem;
+        }
+
+        .admin-buttons {
+            flex-direction: column;
+        }
+
+        .form-buttons {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="admin-palas">
+    <div class="admin-palas-card">
+        <h2>🏓 Panel de Administración de Palas</h2>
+        <div class="admin-buttons">
+            <button class="btn-admin" id="btnAgregarPala">➕ Agregar Pala</button>
+            <button class="btn-admin" id="btnEditarPala">✏️ Editar Pala</button>
+            <button class="btn-admin eliminar" id="btnEliminarPala">🗑️ Eliminar Pala</button>
+        </div>
+
+        <!-- Formulario Agregar -->
+        <div class="panel-form" id="panelAgregar">
+            <form class="admin-form" id="formAgregar">
+                <div class="form-group">
+                    <label for="jugadorAgregar">👤 Selecciona el Jugador:</label>
+                    <select id="jugadorAgregar" required></select>
+                </div>
+
+                <div class="form-group">
+                    <label for="nombrePalaAgregar">🏓 Nombre de la Pala:</label>
+                    <input type="text" id="nombrePalaAgregar" placeholder="Ej: Adidas Metalbone HDR" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="imagenAgregar">🖼️ Imagen de la Pala:</label>
+                    <input type="file" id="imagenAgregar" accept="image/*">
+                    <div class="preview-container" id="previewAgregar">
+                        <img id="previewImageAgregar" class="preview-image" alt="Vista previa">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="precioAgregar">💰 Precio:</label>
+                    <input type="text" id="precioAgregar" placeholder="Ej: 75$" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="descripcionAgregar">📝 Descripción:</label>
+                    <textarea id="descripcionAgregar" placeholder="Escribe la descripción de la pala..." required></textarea>
+                </div>
+
+                <div class="form-buttons">
+                    <button type="submit" class="btn-form">💾 Agregar Pala</button>
+                    <button type="reset" class="btn-form btn-reset">🔄 Limpiar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Formulario Editar -->
+        <div class="panel-form" id="panelEditar">
+            <form class="admin-form" id="formEditar">
+                <div class="form-group">
+                    <label for="jugadorEditar">👤 Selecciona el Jugador:</label>
+                    <select id="jugadorEditar" required></select>
+                </div>
+
+                <div class="form-group">
+                    <label for="palaEditar">🏓 Selecciona la Pala:</label>
+                    <select id="palaEditar" required></select>
+                </div>
+
+                <div class="form-group">
+                    <label for="nombrePalaEditar">🏓 Nuevo Nombre (opcional):</label>
+                    <input type="text" id="nombrePalaEditar" placeholder="Deja vacío para mantener">
+                </div>
+
+                <div class="form-group">
+                    <label for="imagenEditar">🖼️ Nueva Imagen (opcional):</label>
+                    <input type="file" id="imagenEditar" accept="image/*">
+                    <div class="preview-container" id="previewEditar">
+                        <img id="previewImageEditar" class="preview-image" alt="Vista previa">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="precioEditar">💰 Nuevo Precio:</label>
+                    <input type="text" id="precioEditar" placeholder="Ej: 80$" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="descripcionEditar">📝 Nueva Descripción:</label>
+                    <textarea id="descripcionEditar" placeholder="Escribe la nueva descripción..." required></textarea>
+                </div>
+
+                <div class="form-buttons">
+                    <button type="submit" class="btn-form">✅ Guardar Cambios</button>
+                    <button type="reset" class="btn-form btn-reset">🔄 Limpiar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Formulario Eliminar -->
+        <div class="panel-form" id="panelEliminar">
+            <form class="admin-form" id="formEliminar">
+                <div class="form-group">
+                    <label for="jugadorEliminar">👤 Selecciona el Jugador:</label>
+                    <select id="jugadorEliminar" required></select>
+                </div>
+
+                <div class="form-group">
+                    <label for="palaEliminar">🏓 Selecciona la Pala a Eliminar:</label>
+                    <select id="palaEliminar" required></select>
+                </div>
+
+                <div class="form-buttons">
+                    <button type="submit" class="btn-form">❌ Eliminar Pala</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="/public/scripts/jugadores.js" defer></script>
+<link rel="stylesheet" href="../../public/styles/palas.css">
+
+<div class="header-palas">
+    <h1>Nuestras Palas</h1>
+    <p>Descubre las palas favoritas de nuestros jugadores destacados.</p>
+</div>
+
+<main id="palas"></main>
+
+<script>
+    // Definir tipos
+    type Pala = {
+        imagen: string;
+        nombrePala: string;
+        precio: string;
+        descripcion: string;
+    };
+
+    type Jugador = {
+        nombre: string;
+        palas: Pala[];
+    };
+
+    // Verificar si el usuario es admin
+    function verificarAdmin() {
+        const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+        const adminPanel = document.querySelector('.admin-palas');
+        
+        if (usuario.admin === true) {
+            adminPanel?.classList.add('visible');
+        }
+    }
+
+    // Cargar jugadores desde localStorage o usar datos por defecto
+    const jugadoresGuardados = localStorage.getItem('jugadores');
+    let jugadoresData: Jugador[] = jugadoresGuardados ? JSON.parse(jugadoresGuardados) : [
+        {
+            nombre: "Alejandro Galán",
+            palas: [
+                {
+                    imagen: "/public/palas/adidas-metalbone-hrd.png",
+                    nombrePala: "Adidas Metalbone HDR",
+                    precio: "75$",
+                    descripcion: "La Adidas Metalbone HDR es una pala profesional que combina potencia y control. Su forma de diamante, balance alto y tecnología avanzada permiten golpes precisos y fuertes, mientras que su construcción en carbono y goma EVA asegura durabilidad y comodidad. Ideal para jugadores ofensivos de alto nivel.",
+                },
+                {
+                    imagen: "/public/palas/pala-adidas-metalbone-pro-edt.png",
+                    nombrePala: "Adidas Metalbone EDT",
+                    precio: "60$",
+                    descripcion: "La Adidas Metalbone EDT es una pala versátil que combina potencia y control. Su forma de diamante y balance medio-alto facilitan golpes ofensivos y buena manejabilidad. Fabricada en fibra de vidrio y carbono, con goma EVA para un tacto suave, es ideal para jugadores intermedios y avanzados que buscan rendimiento profesional con comodidad.",
+                },
+            ],
+        },
+        {
+            nombre: "Agustín Tapia",
+            palas: [
+                {
+                    imagen: "/public/palas/at10-luxury-genius-18k-alum-.png",
+                    nombrePala: "Nox AT10 Luxury Genius 18K",
+                    precio: "80$",
+                    descripcion: "La Nox AT10 Luxury Genius 18K es la pala oficial de Agustín Tapia, diseñada para ofrecer un equilibrio perfecto entre potencia y control. Su forma de lágrima y su superficie de carbono 18K le confieren una salida de bola excepcional y un tacto firme, ideal para jugadores ofensivos que buscan dominar desde cualquier zona de la pista.",
+                },
+                {
+                    imagen: "/public/palas/nox-at-luxury-attack-18k-alum.png",
+                    nombrePala: "Nox AT Luxury Attack",
+                    precio: "70$",
+                    descripcion: "La Nox AT Luxury Attack está diseñada para jugadores ofensivos que buscan máxima potencia en su juego. Con forma de diamante y carbono de alto rendimiento, permite imprimir gran velocidad a la bola sin perder estabilidad en los golpes.",
+                },
+            ],
+        },
+        {
+            nombre: "Arturo Coello",
+            palas: [
+                {
+                    imagen: "/public/palas/pala-head-delta-pro.png",
+                    nombrePala: "Head Delta Pro",
+                    precio: "85$",
+                    descripcion: "La Head Delta Pro es la pala de referencia de Arturo Coello, pensada para jugadores que buscan una potencia extraordinaria en su juego. Su forma de diamante y su balance alto permiten desplegar un ataque demoledor desde cualquier posición ofensiva.",
+                },
+                {
+                    imagen: "/public/palas/pala-head-extreme-pro.png",
+                    nombrePala: "Head Extreme Pro",
+                    precio: "75$",
+                    descripcion: "La Head Extreme Pro está diseñada para ofrecer un equilibrio entre control y potencia, siendo una alternativa versátil dentro de la gama de Head. Su construcción en carbono de alta resistencia, combinada con el núcleo Power Foam, proporciona un tacto cómodo y una gran salida de bola.",
+                },
+            ],
+        },
+        {
+            nombre: "Federico Chingotto",
+            palas: [
+                {
+                    imagen: "/public/palas/bullpadel-vertex-03-comfort.png",
+                    nombrePala: "Bullpadel Vertex 03 Comfort",
+                    precio: "70$",
+                    descripcion: "La Bullpadel Vertex 03 Comfort es una pala pensada para jugadores que buscan un equilibrio entre control y potencia, con un tacto cómodo y una gran salida de bola. Su forma de diamante, combinada con el núcleo de goma MultiEva, ofrece una gran versatilidad.",
+                },
+                {
+                    imagen: "/public/palas/pala-bullpadel-vertex-control.png",
+                    nombrePala: "Bullpadel Vertex 03 Control",
+                    precio: "75$",
+                    descripcion: "La Bullpadel Vertex 03 Control está diseñada para quienes priorizan el control absoluto del juego sin renunciar a la potencia. Su forma redonda y balance bajo permiten una gran precisión en cada golpe.",
+                },
+            ],
+        }
+    ];
+
+    // Guardar jugadores en localStorage
+    function guardarJugadores() {
+        localStorage.setItem('jugadores', JSON.stringify(jugadoresData));
+        renderizarPalas();
+    }
+
+    // Renderizar palas en el DOM
+    function renderizarPalas() {
+        const main = document.querySelector("#palas");
+        if (!main) return;
+        
+        main.innerHTML = '';
+
+        jugadoresData.forEach((datos) => {
+            let divJugador = document.createElement("div");
+            divJugador.classList.add("seccion-jugador");
+
+            divJugador.innerHTML = `<h2 class="titulo-jugador">${datos.nombre}</h2>`;
+
+            let palasContainer = document.createElement("div");
+            palasContainer.classList.add("palas-container");
+
+            datos.palas.forEach((info) => {
+                let card = document.createElement("div");
+                card.classList.add("card-pala");
+
+                card.innerHTML = `
+                    <div class="imagen-wrapper">
+                        <img src="${info.imagen}" alt="${info.nombrePala}">
+                    </div>
+                    <div class="info-pala">
+                        <h3 class="nombre-pala">${info.nombrePala}</h3>
+                        <p class="precio">${info.precio}</p>
+                        <p class="descripcion">${info.descripcion}</p>
+                        <button class="btn-comprar">Comprar</button>
+                    </div>
+                `;
+                
+                palasContainer.appendChild(card);
+            });
+
+            divJugador.appendChild(palasContainer);
+            main.appendChild(divJugador);
+        });
+    }
+
+    // Poblar selects de jugadores
+    function poblarSelectJugadores() {
+        const selects = ['jugadorAgregar', 'jugadorEditar', 'jugadorEliminar'];
+        selects.forEach((selectId) => {
+            const select = document.getElementById(selectId);
+            if (select) {
+                select.innerHTML = '<option value="">-- Selecciona --</option>';
+                jugadoresData.forEach((jugador, index) => {
+                    const option = document.createElement('option');
+                    option.value = String(index);
+                    option.textContent = jugador.nombre;
+                    select.appendChild(option);
+                });
+            }
+        });
+    }
+
+    // Poblar select de palas según jugador
+    function poblarSelectPalas(jugadorIndex: any, selectId: string) {
+        const select = document.getElementById(selectId);
+        const indexNum = typeof jugadorIndex === 'string' ? parseInt(jugadorIndex) : jugadorIndex;
+        if (!select || jugadorIndex === '' || isNaN(indexNum)) return;
+        
+        select.innerHTML = '<option value="">-- Selecciona --</option>';
+        const jugador = jugadoresData[indexNum];
+        if (jugador) {
+            jugador.palas.forEach((pala, index) => {
+                const option = document.createElement('option');
+                option.value = String(index);
+                option.textContent = pala.nombrePala;
+                select.appendChild(option);
+            });
+        }
+    }
+
+    // Manejo de vista previa de imágenes
+    function setupImagePreview(inputId: string, previewContainerId: string, previewImageId: string) {
+        const input = document.getElementById(inputId) as HTMLInputElement;
+        const previewContainer = document.getElementById(previewContainerId);
+        const previewImage = document.getElementById(previewImageId) as HTMLImageElement;
+
+        if (input) {
+            input.addEventListener('change', (e) => {
+                const archivo = (e.target as HTMLInputElement).files?.[0];
+                if (archivo) {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        if (previewImage && previewContainer) {
+                            previewImage.src = reader.result as string;
+                            previewContainer.classList.add('visible');
+                        }
+                    };
+                    reader.readAsDataURL(archivo);
+                }
+            });
+        }
+    }
+
+    // Toggle panels
+    const btnAgregar = document.getElementById('btnAgregarPala');
+    const btnEditar = document.getElementById('btnEditarPala');
+    const btnEliminar = document.getElementById('btnEliminarPala');
+    const panelAgregar = document.getElementById('panelAgregar');
+    const panelEditar = document.getElementById('panelEditar');
+    const panelEliminar = document.getElementById('panelEliminar');
+
+    btnAgregar?.addEventListener('click', () => {
+        panelAgregar?.classList.toggle('visible');
+        panelEditar?.classList.remove('visible');
+        panelEliminar?.classList.remove('visible');
+    });
+
+    btnEditar?.addEventListener('click', () => {
+        panelEditar?.classList.toggle('visible');
+        panelAgregar?.classList.remove('visible');
+        panelEliminar?.classList.remove('visible');
+    });
+
+    btnEliminar?.addEventListener('click', () => {
+        panelEliminar?.classList.toggle('visible');
+        panelAgregar?.classList.remove('visible');
+        panelEditar?.classList.remove('visible');
+    });
+
+    // Formulario Agregar
+    const formAgregar = document.getElementById('formAgregar');
+    formAgregar?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const jugadorIndex = parseInt((document.getElementById('jugadorAgregar') as HTMLSelectElement).value);
+        const nombrePala = (document.getElementById('nombrePalaAgregar') as HTMLInputElement).value;
+        const precio = (document.getElementById('precioAgregar') as HTMLInputElement).value;
+        const descripcion = (document.getElementById('descripcionAgregar') as HTMLTextAreaElement).value;
+        const imagenInput = document.getElementById('imagenAgregar') as HTMLInputElement;
+        
+        let imagenSrc = '/public/palas/default.png';
+        
+        if (imagenInput.files && imagenInput.files[0]) {
+            const reader = new FileReader();
+            imagenSrc = await new Promise((resolve) => {
+                reader.onload = () => resolve(reader.result as string);
+                reader.readAsDataURL(imagenInput.files![0]);
+            });
+        }
+
+        jugadoresData[jugadorIndex].palas.push({
+            imagen: imagenSrc,
+            nombrePala,
+            precio,
+            descripcion
+        });
+
+        guardarJugadores();
+        (formAgregar as HTMLFormElement).reset();
+        document.getElementById('previewAgregar')?.classList.remove('visible');
+        alert('✅ Pala agregada correctamente');
+    });
+
+    // Formulario Editar
+    const jugadorEditar = document.getElementById('jugadorEditar');
+    jugadorEditar?.addEventListener('change', (e) => {
+        const index = (e.target as HTMLSelectElement).value;
+        poblarSelectPalas(parseInt(index), 'palaEditar');
+    });
+
+    const palaEditar = document.getElementById('palaEditar');
+    palaEditar?.addEventListener('change', (e) => {
+        const jugadorIndex = parseInt((document.getElementById('jugadorEditar') as HTMLSelectElement).value);
+        const palaIndex = parseInt((e.target as HTMLSelectElement).value);
+        
+        if (jugadorIndex >= 0 && palaIndex >= 0) {
+            const pala = jugadoresData[jugadorIndex].palas[palaIndex];
+            (document.getElementById('nombrePalaEditar') as HTMLInputElement).value = pala.nombrePala;
+            (document.getElementById('precioEditar') as HTMLInputElement).value = pala.precio;
+            (document.getElementById('descripcionEditar') as HTMLTextAreaElement).value = pala.descripcion;
+        }
+    });
+
+    const formEditar = document.getElementById('formEditar');
+    formEditar?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const jugadorIndex = parseInt((document.getElementById('jugadorEditar') as HTMLSelectElement).value);
+        const palaIndex = parseInt((document.getElementById('palaEditar') as HTMLSelectElement).value);
+        const nuevoNombre = (document.getElementById('nombrePalaEditar') as HTMLInputElement).value;
+        const nuevoPrecio = (document.getElementById('precioEditar') as HTMLInputElement).value;
+        const nuevaDescripcion = (document.getElementById('descripcionEditar') as HTMLTextAreaElement).value;
+        const imagenInput = document.getElementById('imagenEditar') as HTMLInputElement;
+        
+        const pala = jugadoresData[jugadorIndex].palas[palaIndex];
+        
+        if (nuevoNombre) pala.nombrePala = nuevoNombre;
+        pala.precio = nuevoPrecio;
+        pala.descripcion = nuevaDescripcion;
+        
+        if (imagenInput.files && imagenInput.files[0]) {
+            const reader = new FileReader();
+            pala.imagen = await new Promise((resolve) => {
+                reader.onload = () => resolve(reader.result as string);
+                reader.readAsDataURL(imagenInput.files![0]);
+            });
+        }
+
+        guardarJugadores();
+        (formEditar as HTMLFormElement).reset();
+        document.getElementById('previewEditar')?.classList.remove('visible');
+        alert('✅ Pala actualizada correctamente');
+    });
+
+    // Formulario Eliminar
+    const jugadorEliminar = document.getElementById('jugadorEliminar');
+    jugadorEliminar?.addEventListener('change', (e) => {
+        const index = (e.target as HTMLSelectElement).value;
+        poblarSelectPalas(parseInt(index), 'palaEliminar');
+    });
+
+    const formEliminar = document.getElementById('formEliminar');
+    formEliminar?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const jugadorIndex = parseInt((document.getElementById('jugadorEliminar') as HTMLSelectElement).value);
+        const palaIndex = parseInt((document.getElementById('palaEliminar') as HTMLSelectElement).value);
+        
+        const pala = jugadoresData[jugadorIndex].palas[palaIndex];
+        
+        if (confirm(`❓ ¿Estás seguro de eliminar "${pala.nombrePala}"?`)) {
+            jugadoresData[jugadorIndex].palas.splice(palaIndex, 1);
+            guardarJugadores();
+            (formEliminar as HTMLFormElement).reset();
+            poblarSelectPalas(jugadorIndex, 'palaEliminar');
+            alert('✅ Pala eliminada correctamente');
+        }
+    });
+
+    // Inicialización
+    document.addEventListener('DOMContentLoaded', () => {
+        verificarAdmin();
+        guardarJugadores();
+        poblarSelectJugadores();
+        setupImagePreview('imagenAgregar', 'previewAgregar', 'previewImageAgregar');
+        setupImagePreview('imagenEditar', 'previewEditar', 'previewImageEditar');
+    });
+</script>

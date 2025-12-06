@@ -70,15 +70,26 @@ if (form) {
 
         // ✅ Si todo está correcto
         if (validaRegistro) {
+            // Verificar credenciales de administrador específicas
+            const isAdmin = email === "admin@lowpadel.com" && password === "Admin01@";
+            
             const usuario = {
                 nombre,
                 nick,
                 email,
                 imagen: fotoBase64 || "",
+                admin: isAdmin
             };
 
             localStorage.setItem("usuario", JSON.stringify(usuario));
             mostrarPerfil(usuario);
+            
+            // Notificar si es admin
+            if (isAdmin) {
+                setTimeout(() => {
+                    alert("✅ ¡Bienvenido Administrador! Tienes acceso al panel de administración en Noticias y Palas.");
+                }, 500);
+            }
         }
     });
 }

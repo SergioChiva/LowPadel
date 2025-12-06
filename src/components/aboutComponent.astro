@@ -1,57 +1,289 @@
 <section class="sobre-nosotros">
-    <h1>Sobre Nosotros</h1>
-    <p>
-      ¡Hola! Soy <strong>Sergio Chiva</strong>, programador y desarrollador web en formación. 
-      Este proyecto web está dedicado a mostrar algunas palas de pádel de forma sencilla y clara.
-    </p>
+    <div class="hero-section">
+        <h1>🏆 Bienvenidos a LowPadel</h1>
+        <p class="subtitle">Tu tienda especializada en pádel de élite</p>
+    </div>
 
-    <h2>Nuestro objetivo</h2>
-    <p>
-      La idea principal es aprender y practicar desarrollo web usando Astro, Js, HTML, CSS y un poco de PHP. 
-      Queremos mostrar un catálogo reducido de palas con información básica de cada jugador.
-    </p>
+    <div class="content-grid">
+        <div class="info-card">
+            <div class="icon">🎾</div>
+            <h2>Nuestra Historia</h2>
+            <p>
+                Fundada en 2020, <strong>LowPadel</strong> nace de la pasión por el pádel y el compromiso de ofrecer 
+                el mejor equipamiento a jugadores de todos los niveles. Nos especializamos en las palas oficiales 
+                de los mejores jugadores del circuito profesional mundial.
+            </p>
+        </div>
 
-    <h2>Equipo y colaboradores</h2>
-    <p>
-      Por ahora soy yo, Sergio Chiva, quien ha creado todo este proyecto como ejercicio académico y 
-      para practicar buenas prácticas de diseño web y organización de componentes.
-    </p>
+        <div class="info-card">
+            <div class="icon">🌟</div>
+            <h2>¿Por Qué Elegirnos?</h2>
+            <p>
+                Trabajamos directamente con las marcas más prestigiosas del pádel: <strong>Adidas</strong>, 
+                <strong>Nox</strong>, <strong>Head</strong> y <strong>Bullpadel</strong>. Ofrecemos las mismas 
+                palas que usan los profesionales en los torneos internacionales, garantizando calidad y rendimiento 
+                excepcional.
+            </p>
+        </div>
 
-    <h2>Nota importante</h2>
-    <p>
-      Este proyecto es únicamente educativo y no se trata de una tienda real. No se pueden realizar compras 
-      ni transacciones; todo el contenido es ficticio.
-    </p>
+        <div class="info-card">
+            <div class="icon">💎</div>
+            <h2>Catálogo Premium</h2>
+            <p>
+                Nuestro catálogo está cuidadosamente seleccionado con las palas de <strong>Alejandro Galán</strong>, 
+                <strong>Agustín Tapia</strong>, <strong>Arturo Coello</strong> y <strong>Federico Chingotto</strong>. 
+                Cada pala ha sido probada por los mejores jugadores del mundo.
+            </p>
+        </div>
+
+        <div class="info-card">
+            <div class="icon">🚀</div>
+            <h2>Nuestra Misión</h2>
+            <p>
+                Democratizar el acceso a equipamiento profesional de pádel. Creemos que todos los jugadores, 
+                desde principiantes hasta avanzados, merecen jugar con las mejores herramientas. Nuestro objetivo 
+                es inspirar y equipar a la próxima generación de campeones.
+            </p>
+        </div>
+
+        <div class="info-card">
+            <div class="icon">📰</div>
+            <h2>Comunidad y Noticias</h2>
+            <p>
+                No solo vendemos palas, creamos comunidad. Mantente informado con las últimas noticias del mundo 
+                del pádel, torneos, entrevistas exclusivas y novedades de producto. Únete a nuestra comunidad 
+                de apasionados del pádel.
+            </p>
+        </div>
+
+        <div class="info-card">
+            <div class="icon">✨</div>
+            <h2>Compromiso de Calidad</h2>
+            <p>
+                Todas nuestras palas son 100% originales y vienen con garantía oficial del fabricante. 
+                Envíos rápidos y seguros a toda España. Atención personalizada para ayudarte a elegir 
+                la pala perfecta para tu estilo de juego.
+            </p>
+        </div>
+    </div>
+
+    <div class="cta-section">
+        <h2>¿Listo para mejorar tu juego?</h2>
+        <p>Explora nuestro catálogo y encuentra la pala perfecta para ti</p>
+        <a href="/palas" class="cta-button">Ver Nuestras Palas</a>
+    </div>
 </section>
 
 
 <style>
 .sobre-nosotros {
-  padding: 4rem 2rem;
-  max-width: 900px;
+  padding: 3rem 2rem 5rem;
+  max-width: 1400px;
   margin: 0 auto;
   margin-top: 20px;
+  position: relative;
+}
+
+.hero-section {
   text-align: center;
-  color: #003d83;
-  background-color: #f7f7f7a8;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  margin-bottom: 60px;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, rgba(0, 200, 150, 0.1), rgba(147, 51, 234, 0.1));
+  backdrop-filter: blur(10px);
+  border-radius: 30px;
+  border: 2px solid rgba(0, 200, 150, 0.3);
+  box-shadow: 0 20px 60px rgba(0, 200, 150, 0.2);
+  position: relative;
+  overflow: hidden;
 }
 
-.sobre-nosotros h1 {
-  font-size: 3rem;
-  margin-bottom: 2rem;
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(147, 51, 234, 0.1) 0%, transparent 70%);
+  animation: rotate 20s linear infinite;
+  pointer-events: none;
 }
 
-.sobre-nosotros h2 {
-  font-size: 2rem;
-  margin-top: 2.5rem;
-  margin-bottom: 1rem;
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
-.sobre-nosotros p {
+.hero-section h1 {
+  font-size: 3.5rem;
+  background: linear-gradient(135deg, #00c896 0%, #9333ea 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 900;
+  letter-spacing: 1px;
+  margin-bottom: 15px;
+  position: relative;
+  z-index: 1;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  color: #6ee7b7;
+  font-weight: 600;
+  position: relative;
+  z-index: 1;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+  margin-bottom: 60px;
+}
+
+.info-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(241, 245, 249, 0.9) 100%);
+  backdrop-filter: blur(15px);
+  border: 2px solid rgba(0, 200, 150, 0.2);
+  border-radius: 24px;
+  padding: 35px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.info-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(0, 200, 150, 0.05) 0%, rgba(147, 51, 234, 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-10px);
+  border-color: #00c896;
+  box-shadow: 0 25px 60px rgba(0, 200, 150, 0.3);
+}
+
+.info-card:hover::before {
+  opacity: 1;
+}
+
+.icon {
+  font-size: 3.5rem;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 4px 12px rgba(0, 200, 150, 0.3));
+  position: relative;
+  z-index: 1;
+}
+
+.info-card h2 {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  background: linear-gradient(135deg, #00c896 0%, #6ee7b7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  position: relative;
+  z-index: 1;
+}
+
+.info-card p {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #475569;
+  text-align: justify;
+  position: relative;
+  z-index: 1;
+}
+
+.info-card strong {
+  color: #9333ea;
+  font-weight: 700;
+}
+
+.cta-section {
+  text-align: center;
+  padding: 50px 30px;
+  background: linear-gradient(135deg, rgba(0, 200, 150, 0.15), rgba(147, 51, 234, 0.15));
+  backdrop-filter: blur(10px);
+  border-radius: 30px;
+  border: 2px solid rgba(0, 200, 150, 0.3);
+  box-shadow: 0 20px 60px rgba(0, 200, 150, 0.2);
+}
+
+.cta-section h2 {
+  font-size: 2.5rem;
+  background: linear-gradient(135deg, #00c896 0%, #9333ea 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+  margin-bottom: 15px;
+}
+
+.cta-section p {
+  font-size: 1.3rem;
+  color: #6ee7b7;
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+.cta-button {
+  display: inline-block;
+  background: linear-gradient(135deg, #00c896, #6ee7b7);
+  color: #1a2332;
   font-size: 1.2rem;
-  line-height: 1.6;
+  font-weight: 700;
+  padding: 18px 50px;
+  border-radius: 50px;
+  text-decoration: none;
+  box-shadow: 0 8px 25px rgba(0, 200, 150, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
 
+.cta-button:hover {
+  background: linear-gradient(135deg, #6ee7b7, #00c896);
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 15px 40px rgba(0, 200, 150, 0.5);
+}
+
+@media (max-width: 768px) {
+  .hero-section h1 {
+    font-size: 2.5rem;
+  }
+
+  .subtitle {
+    font-size: 1.2rem;
+  }
+
+  .content-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .info-card {
+    padding: 25px;
+  }
+
+  .cta-section h2 {
+    font-size: 2rem;
+  }
+
+  .cta-button {
+    padding: 15px 35px;
+    font-size: 1.1rem;
+  }
 }
 </style>

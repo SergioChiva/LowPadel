@@ -1,61 +1,135 @@
 
   <style>
     :root {
-      --azul-oscuro: #003d83;
-      --azul: #1a73e8;
-      --azul-claro: #3badff98;
+      --primary-dark: #1a2332;
+      --primary: #00c896;
+      --primary-light: #6ee7b7;
+      --accent: #9333ea;
+      --accent-light: #c084fc;
+      --background: #0f172a;
       --blanco: #ffffff;
+      --text-light: #f1f5f9;
     }
 
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: var(--azul-claro);
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
       display: block;
+      min-height: 100vh;
     }
 
     .registro-container {
-      background: var(--azul-oscuro);
+      background: linear-gradient(135deg, rgba(0, 200, 150, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       padding: 60px;
-      border-radius: 20px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-      width: 350px;
-      color: var(--blanco);
+      border-radius: 30px;
+      box-shadow: 0 20px 60px rgba(0, 200, 150, 0.2), 0 0 30px rgba(147, 51, 234, 0.1);
+      width: 380px;
+      color: var(--text-light);
       text-align: center;
       margin: 50px auto;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .registro-container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(0, 200, 150, 0.05) 0%, transparent 70%);
+      animation: pulse 4s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.1); opacity: 0.8; }
     }
 
     .registro-container h1 {
-      margin-bottom: 30px;
-      font-size: 28px;
+      margin-bottom: 35px;
+      font-size: 32px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 800;
+      position: relative;
+      z-index: 1;
     }
 
     .registro-container input {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       margin-bottom: 20px;
-      border: none;
-      border-radius: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
       outline: none;
       font-size: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      color: var(--text-light);
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .registro-container input:focus {
+      border-color: var(--primary);
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 20px rgba(0, 200, 150, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    .registro-container input::placeholder {
+      color: rgba(241, 245, 249, 0.5);
     }
 
     .registro-container button {
       width: 100%;
-      padding: 12px;
+      padding: 15px;
       border: none;
       border-radius: 25px;
-      background: var(--azul);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
       color: var(--blanco);
       font-weight: bold;
-      font-size: 16px;
+      font-size: 17px;
       cursor: pointer;
-      transition: background 0.3s, transform 0.2s;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      box-shadow: 0 4px 15px rgba(0, 200, 150, 0.3);
+    }
+    
+    .registro-container button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+    
+    .registro-container button:hover::before {
+      width: 400px;
+      height: 400px;
     }
 
     .registro-container button:hover {
-      background: var(--azul-claro);
-      transform: translateY(-2px);
+      background: linear-gradient(135deg, var(--primary-light) 0%, var(--accent-light) 100%);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(0, 200, 150, 0.5), 0 0 20px rgba(147, 51, 234, 0.3);
     }
 
     .registro-container p {
@@ -64,21 +138,41 @@
     }
 
     .registro-container a {
-      color: #ffeb3b;
+      color: var(--primary-light);
       text-decoration: none;
       font-weight: bold;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .registro-container a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+      transition: width 0.3s ease;
     }
 
     .registro-container a:hover {
-      text-decoration: underline;
+      color: var(--primary);
+      text-shadow: 0 0 10px rgba(0, 200, 150, 0.5);
+    }
+    
+    .registro-container a:hover::after {
+      width: 100%;
     }
 
     .error {
-      color: #ff4f4f;
+      color: #ff6b6b;
       font-size: 13px;
       margin-top: -15px;
       margin-bottom: 15px;
       display: block;
+      text-shadow: 0 2px 10px rgba(255, 107, 107, 0.3);
+      font-weight: 600;
     }
   </style>
 </head>
@@ -112,7 +206,9 @@
 <div id="perfil" style="
   display:none; 
   max-width:400px; 
-  background:#003d83; 
+  background: linear-gradient(135deg, rgba(0, 200, 150, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2); 
   color:white; 
   padding:40px; 
   border-radius:25px; 
@@ -130,7 +226,7 @@
       width:120px; 
       height:120px; 
       object-fit:cover; 
-      border:4px solid #1a73e8;
+      border:4px solid var(--primary);
     ">
   </div>
 
@@ -149,7 +245,7 @@
       text-decoration:none; 
       font-weight:bold;
       transition:0.3s;
-    " onmouseover="this.style.background='#3badff'" onmouseout="this.style.background='#1a73e8'">Cambiar correo</a>
+    " onmouseover="this.style.background='linear-gradient(135deg, #6ee7b7 0%, #c084fc 100%)'" onmouseout="this.style.background='linear-gradient(135deg, #00c896 0%, #9333ea 100%)'">Cambiar correo</a>
 
     <a href="#" style="
       padding:10px 20px; 
@@ -159,7 +255,7 @@
       text-decoration:none; 
       font-weight:bold;
       transition:0.3s;
-    " onmouseover="this.style.background='#3badff'" onmouseout="this.style.background='#1a73e8'">Cambiar contraseña</a>
+    " onmouseover="this.style.background='linear-gradient(135deg, #6ee7b7 0%, #c084fc 100%)'" onmouseout="this.style.background='linear-gradient(135deg, #00c896 0%, #9333ea 100%)'">Cambiar contraseña</a>
   </div>
 
   <!-- Botón cerrar sesión -->

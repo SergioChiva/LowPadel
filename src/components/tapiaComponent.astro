@@ -37,24 +37,28 @@
     justify-content: center;
     align-items: center;
     padding: 4rem 1rem;
-    background: var(--azul-claro);
-    color: var(--blanco);
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: #f1f5f9;
+    min-height: 80vh;
     }
 
     .jugador-card {
     display: flex;
     flex-wrap: wrap;
-    background-color: var(--azul);
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    background: linear-gradient(135deg, rgba(0, 200, 150, 0.15) 0%, rgba(147, 51, 234, 0.15) 100%);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 30px;
+    box-shadow: 0 20px 50px rgba(0, 200, 150, 0.2), 0 0 30px rgba(147, 51, 234, 0.1);
     overflow: hidden;
-    max-width: 1000px;
+    max-width: 1100px;
     width: 100%;
-    transition: transform 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     .jugador-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 30px 70px rgba(0, 200, 150, 0.3), 0 0 50px rgba(147, 51, 234, 0.2);
     }
 
     .jugador-foto {
@@ -62,7 +66,20 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: var(--azul-oscuro);
+    background: linear-gradient(135deg, #1a2332 0%, #0f172a 100%);
+    position: relative;
+    overflow: hidden;
+    }
+    
+    .jugador-foto::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(0, 200, 150, 0.2) 0%, rgba(147, 51, 234, 0.2) 100%);
+    opacity: 0.5;
     }
 
     .jugador-foto img {
@@ -70,6 +87,14 @@
     height: 100%;
     max-width: 350px;
     object-fit: cover;
+    transition: transform 0.5s ease;
+    position: relative;
+    z-index: 1;
+    filter: brightness(1.05) contrast(1.1);
+    }
+    
+    .jugador-card:hover .jugador-foto img {
+    transform: scale(1.08);
     }
 
     .jugador-info {
@@ -79,29 +104,45 @@
     }
 
     .jugador-info h1 {
-    font-size: 2rem;
-    margin-bottom: 0.2rem;
+    font-size: 2.4rem;
+    margin-bottom: 0.3rem;
+    background: linear-gradient(135deg, #00c896 0%, #6ee7b7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 800;
+    letter-spacing: 1px;
     }
 
     .jugador-info h2 {
-    font-size: 1.4rem;
-    color: #d4e6ff;
-    margin-bottom: 1.2rem;
+    font-size: 1.5rem;
+    background: linear-gradient(135deg, #c084fc 0%, #9333ea 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    font-style: italic;
     }
 
     .jugador-datos {
-    background: rgba(255,255,255,0.1);
-    border-radius: 10px;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-    line-height: 1.6;
+    background: linear-gradient(135deg, rgba(0, 200, 150, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 15px;
+    padding: 1.3rem;
+    margin-bottom: 1.8rem;
+    line-height: 1.8;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
 
     .jugador-bio {
-    font-size: 1rem;
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
-    color: #f1f5ff;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+    color: #e2e8f0;
+    text-align: justify;
+    padding: 0 5px;
     }
 
     .jugador-botones {
@@ -119,13 +160,36 @@
     }
 
     .btn-seguir {
-    background: transparent;
-    border: 2px solid #fff;
+    background: linear-gradient(135deg, #00c896 0%, #9333ea 100%);
+    border: 2px solid rgba(255, 255, 255, 0.3);
     color: #fff;
+    position: relative;
+    overflow: hidden;
+    }
+    
+    .btn-seguir::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+    }
+    
+    .btn-seguir:hover::before {
+    width: 300px;
+    height: 300px;
     }
 
     .btn-seguir:hover {
-    background: #0a2a5e;
+    background: linear-gradient(135deg, #6ee7b7 0%, #c084fc 100%);
+    border-color: #fff;
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(0, 200, 150, 0.4);
     }
 
     /* Responsive */
