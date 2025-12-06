@@ -9,11 +9,11 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/vercel": "^9.0.2",
     "astro": "^5.12.4"
   },
   "description": "```sh npm create astro@latest -- --template basics ```",
   "main": "index.js",
-  "devDependencies": {},
   "keywords": [],
   "author": "",
   "license": "ISC"
