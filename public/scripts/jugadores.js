@@ -106,6 +106,18 @@ jugadores.forEach(datos => {
                 <button class="btn-comprar">Comprar</button>
             </div>
         `;
+
+        // Evento para añadir al carrito
+        const btnComprar = card.querySelector('.btn-comprar');
+        btnComprar.addEventListener('click', () => {
+            agregarAlCarrito({
+                nombre: info.nombrePala,
+                precio: info.precio.replace('$', ''),
+                imagen: info.imagen,
+                jugador: datos.nombre,
+                cantidad: 1
+            });
+        });
         
         // Lo adjuntamos al nuevo contenedor de palas
         palasContainer.appendChild(card);
@@ -114,3 +126,96 @@ jugadores.forEach(datos => {
     divJugador.appendChild(palasContainer); // Adjuntamos el contenedor de palas
     main.appendChild(divJugador);
 });
+
+// Función para agregar al carrito
+function agregarAlCarrito(pala) {
+    let carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
+    
+    // Verificar si la pala ya está en el carrito
+    const indiceExistente = carrito.findIndex(item => item.nombre === pala.nombre);
+    
+    if (indiceExistente !== -1) {
+        // Si ya existe, aumentar cantidad
+        carrito[indiceExistente].cantidad += 1;
+    } else {
+        // Si no existe, agregar
+        carrito.push(pala);
+    }
+    
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+    
+    // Mostrar notificación
+    mostrarNotificacion('✅ Pala añadida al carrito');
+    actualizarContadorCarrito();
+}
+
+// Función para mostrar notificación
+function mostrarNotificacion(mensaje) {
+    const notif = document.createElement('div');
+    notif.className = 'notificacion-carrito';
+    notif.textContent = mensaje;
+    notif.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: linear-gradient(135deg, #00c896, #6ee7b7);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 200, 150, 0.4);
+        z-index: 10000;
+        animation: slideIn 0.3s ease-out;
+    `;
+    
+    document.body.appendChild(notif);
+    
+    setTimeout(() => {
+        notif.style.animation = 'slideOut 0.3s ease-out';
+        setTimeout(() => notif.remove(), 300);
+    }, 2500);
+}
+
+// Función para actualizar contador del carrito
+function actualizarContadorCarrito() {
+    const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
+    const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+    
+    // Actualizar badge si existe
+    const badge = document.getElementById('carrito-count');
+    if (badge) {
+        badge.textContent = totalItems;
+        badge.style.display = totalItems > 0 ? 'flex' : 'none';
+    }
+}
+
+// Actualizar contador al cargar
+document.addEventListener('DOMContentLoaded', () => {
+    actualizarContadorCarrito();
+});
+
+// Estilos para las animaciones
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOut {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);

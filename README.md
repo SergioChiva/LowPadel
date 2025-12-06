@@ -1,71 +1,117 @@
-# 🏓 LowPadel - Tienda Online de Palas de Pádel
+# 🏓 LowPadel - E-commerce de Palas de Pádel
 
 [![Astro](https://img.shields.io/badge/Astro-5.12.4-FF5D01?style=for-the-badge&logo=astro&logoColor=white)](https://astro.build)
 [![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)
 [![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
+[![Vercel](https://img.shields.io/badge/Deploy-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com)
 
-**LowPadel** es una tienda online especializada en palas de pádel de jugadores profesionales. El proyecto combina un frontend moderno desarrollado con **Astro** y un backend robusto con **Node.js + Express + MongoDB Atlas**.
+**LowPadel** es una plataforma e-commerce completa especializada en palas de pádel profesionales. Desarrollada con **Astro** en el frontend y **Node.js + Express + MongoDB** en el backend, ofrece una experiencia de compra moderna con sistema de autenticación, gestión de pedidos y panel de administración.
+
+🌐 **Demo Live**: [https://lowpadel.vercel.app](https://lowpadel.vercel.app)
 
 ---
 
-## 🌟 Características
+## 🌟 Características Principales
+
+### 🛍️ E-commerce Completo
+- ✨ **Catálogo de Productos**: 8+ palas profesionales de Tapia, Galán, Coello y Chingotto
+- 🛒 **Carrito de Compras**: Sistema de carrito con contador en tiempo real
+- 💳 **Checkout**: Proceso de compra simulado con validación de tarjeta
+- 📦 **Gestión de Pedidos**: Historial completo de compras con estados
+- 🔐 **Autenticación**: Sistema completo de registro/login con localStorage y API
+
+### 👤 Perfiles de Usuario
+- 📋 **Perfil Personal**: Gestión de datos del usuario (nombre, email, foto)
+- 🛍️ **Historial de Pedidos**: Visualización de compras con estados (pendiente, procesando, enviado, entregado, cancelado)
+- ✏️ **Edición de Perfil**: Actualización de información personal
+- 🎯 **Verificación Admin**: Acceso diferenciado para administradores
+
+### 👨‍💼 Panel de Administración
+- 🏓 **Gestión de Palas**: CRUD completo (crear, leer, actualizar, eliminar)
+- 📰 **Gestión de Noticias**: Sistema de noticias con editor completo
+- 👥 **Gestión de Usuarios**: Listado y administración de cuentas
+- 📊 **Gestión de Pedidos**: Actualización de estados y seguimiento
+
+### 🎨 Diseño y UX
+- 💎 **Glassmorphism**: Interfaz moderna con efectos de cristal
+- 🌈 **Tema Verde/Morado**: Paleta de colores profesional (#00c896, #9333ea)
+- 📱 **Responsive**: Adaptado para móviles, tablets y escritorio
+- ⚡ **Animaciones**: Transiciones suaves y efectos visuales
+- 🌙 **Modo Oscuro**: Diseño oscuro con video de fondo
+
+### 🏆 Perfiles de Jugadores
+- 🎾 **Agustín Tapia**: Nox AT10 Luxury Genius 18K y más
+- 🏅 **Alejandro Galán**: Adidas Metalbone HDR y EDT
+- 💪 **Arturo Coello**: Head Delta Pro y Extreme Pro
+- 🔥 **Federico Chingotto**: Bullpadel Vertex 03 Comfort y Control
+
+---
+
+## 🛠️ Stack Tecnológico
 
 ### Frontend
-- ✨ **Diseño Moderno**: Interfaz elegante con glassmorphism y gradientes verdes/morados
-- 🎨 **Responsive**: Adaptado para dispositivos móviles, tablets y escritorio
-- 🏆 **Perfiles de Jugadores**: Secciones dedicadas a Tapia, Galán, Coello y Chingo
-- 📰 **Sistema de Noticias**: Gestión dinámica de noticias del mundo del pádel
-- 🛒 **Catálogo de Palas**: Visualización y gestión de productos
-- 🔐 **Panel de Admin**: Sistema de autenticación para gestionar contenido
+- **Framework**: [Astro 5.12.4](https://astro.build) - Framework web de próxima generación
+- **Estilos**: CSS3 con variables CSS, gradientes, glassmorphism
+- **JavaScript**: Vanilla JS moderno (ES6+)
+- **Storage**: LocalStorage para estado temporal
+- **Deploy**: Vercel (SSG)
 
 ### Backend
-- 🚀 **API RESTful**: Endpoints completos para CRUD de palas
-- 🔒 **Autenticación**: Sistema de verificación con email y password
-- 📦 **MongoDB Atlas**: Base de datos en la nube
-- 🖼️ **Manejo de Imágenes**: Soporte para Base64 y archivos
-- ✅ **Validación**: Validación robusta de datos con Mongoose
-- 🌐 **CORS**: Configurado para desarrollo y producción
-- ☁️ **Deploy Ready**: Preparado para desplegar en Vercel
-
----
-
-## 📸 Preview
-
-```
-🏠 Inicio → Bienvenida con vídeos de jugadores
-👤 Jugadores → Perfiles de Tapia, Galán, Coello, Chingo
-🏓 Palas → Catálogo de productos con precios
-📰 Noticias → Últimas noticias del pádel
-👨‍💼 Admin → Panel para gestionar palas y noticias
-```
-
----
-
-## 🛠️ Tecnologías
-
-### Frontend
-- **Framework**: [Astro](https://astro.build) - Framework web moderno
-- **Estilos**: CSS3 con gradientes, glassmorphism y animaciones
-- **JavaScript**: Vanilla JS para interactividad
-
-### Backend
-- **Runtime**: Node.js 14+
+- **Runtime**: Node.js 18+
 - **Framework**: Express 5.1.0
 - **Base de Datos**: MongoDB Atlas (Cloud)
 - **ODM**: Mongoose 8.20.0
-- **Autenticación**: Headers personalizados
-- **Subida de Archivos**: Multer 2.0.2
-- **Validación**: Validator.js
+- **Middleware**: CORS, Express JSON (10MB limit)
+- **File Upload**: Multer 2.0.2 (5MB limit, solo imágenes)
+- **Validación**: Validator 13.15.23
+- **Module System**: ES Modules (import/export)
+- **Deploy**: Vercel Serverless Functions
+
+### Estructura de la Base de Datos
+```javascript
+// Modelos Mongoose
+Usuario {
+  nombre, email, password, fotoPerfil,
+  isAdmin, pedidos[], timestamps
+}
+
+Pala {
+  nombre, jugador, precio, descripcion,
+  imagen, categoria, stock, timestamps
+}
+
+Noticia {
+  titulo, descripcion, imagen, autor, timestamps
+}
+
+Pedido {
+  usuario, productos[], total, estado,
+  datosPago{}, direccionEnvio{}, timestamps
+}
+```
 
 ---
 
-## 🚀 Instalación y Uso
+## 📸 Capturas de Pantalla
+
+### Página Principal
+![Home](docs/screenshot-home.png)
+
+### Catálogo de Palas
+![Palas](docs/screenshot-palas.png)
+
+### Perfil de Usuario
+![Perfil](docs/screenshot-perfil.png)
+
+### Checkout
+![Checkout](docs/screenshot-checkout.png)
+
+## 🚀 Instalación Rápida
 
 ### Prerequisitos
 
-- Node.js v14 o superior
-- npm o yarn
+- Node.js v18 o superior
+- npm o pnpm
 - Cuenta en MongoDB Atlas (gratuita)
 - Git
 
@@ -82,80 +128,412 @@ cd LowPadel
 npm install
 ```
 
-### 3️⃣ Instalar Dependencias del Backend
+### 3️⃣ Configurar Backend
 
 ```bash
 cd backend
 npm install
 ```
 
-### 4️⃣ Configurar Variables de Entorno
-
-Crea un archivo `.env` en la carpeta `backend`:
+Crea el archivo `backend/.env`:
 
 ```env
-PORT=4000
-MONGODB_URI=mongodb+srv://usuario:password@cluster.mongodb.net/lowpadel?retryWrites=true&w=majority
-ADMIN_EMAIL=admin@lowpadel.com
-ADMIN_PASSWORD=Admin01@
+MONGO_URI=mongodb+srv://usuario:password@cluster.mongodb.net/lowpadel?retryWrites=true&w=majority
+PORT=5000
+NODE_ENV=development
+FRONTEND_URL=http://localhost:4321
 ```
 
-> 📝 **Nota**: Reemplaza `usuario`, `password` y `cluster` con tus credenciales de MongoDB Atlas.
+### 4️⃣ Iniciar el Proyecto
 
-### 5️⃣ Iniciar el Backend
+**Opción 1: Desarrollo completo (Frontend + Backend)**
 
 ```bash
+# Terminal 1 - Backend
 cd backend
 npm run dev
-```
 
-El servidor estará disponible en `http://localhost:4000`
-
-### 6️⃣ Inicializar la Base de Datos
-
-```powershell
-# Cargar las 8 palas iniciales
-Invoke-WebRequest -Uri "http://localhost:4000/api/palas/seed" -Method POST
-```
-
-### 7️⃣ Iniciar el Frontend
-
-En otra terminal:
-
-```bash
+# Terminal 2 - Frontend
 cd ..
 npm run dev
 ```
 
-El sitio estará disponible en `http://localhost:4321`
+**Opción 2: Solo Frontend (sin base de datos)**
+
+```bash
+npm run dev
+```
+
+> El frontend funciona con localStorage sin necesidad del backend para testing básico.
+
+### 5️⃣ Poblar la Base de Datos (Primera vez)
+
+```powershell
+# Seed de palas (8 palas)
+Invoke-RestMethod -Uri "http://localhost:5000/api/palas/seed" -Method POST
+
+# Seed de noticias (3 noticias)
+Invoke-RestMethod -Uri "http://localhost:5000/api/noticias/seed" -Method POST
+
+# Crear usuario admin
+$body = @{
+    nombre = "Administrador"
+    email = "admin@lowpadel.com"
+    password = "Admin01@"
+    isAdmin = $true
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri "http://localhost:5000/api/usuarios/registro" `
+    -Method POST -ContentType "application/json" -Body $body
+```
+
+### 6️⃣ Acceder a la Aplicación
+
+- **Frontend**: [http://localhost:4321](http://localhost:4321)
+- **Backend API**: [http://localhost:5000/api](http://localhost:5000/api)
+
+**Credenciales Admin**:
+- Email: `admin@lowpadel.com`
+- Password: `Admin01@`
 
 ---
 
-## 📡 API Endpoints
+## 📡 API Reference
 
-### Base URL: `http://localhost:4000/api/palas`
+### Base URL
+```
+Desarrollo: http://localhost:5000/api
+Producción: https://tu-backend.vercel.app/api
+```
 
-| Método | Endpoint | Descripción | Auth |
+### 🔐 Usuarios
+
+| Método | Endpoint | Descripción | Body |
 |--------|----------|-------------|------|
-| `GET` | `/` | Obtener todas las palas | No |
-| `GET` | `/:id` | Obtener pala por ID | No |
-| `GET` | `/jugador/:jugador` | Obtener palas por jugador | No |
-| `POST` | `/seed` | Inicializar BD con datos | No |
-| `POST` | `/` | Crear nueva pala | ✅ |
-| `PUT` | `/:id` | Actualizar pala | ✅ |
-| `DELETE` | `/:id` | Eliminar pala | ✅ |
+| `POST` | `/usuarios/registro` | Registrar usuario | `{ nombre, email, password }` |
+| `POST` | `/usuarios/login` | Iniciar sesión | `{ email, password }` |
+| `GET` | `/usuarios/:id` | Obtener perfil | - |
+| `PUT` | `/usuarios/:id` | Actualizar perfil | `{ nombre?, email?, fotoPerfil? }` |
+| `DELETE` | `/usuarios/:id` | Eliminar cuenta | - |
+| `GET` | `/usuarios/` | Listar usuarios (admin) | - |
 
-**Autenticación (Headers):**
-```javascript
-headers: {
-  'email': 'admin@lowpadel.com',
-  'password': 'Admin01@'
-}
+### 🏓 Palas
+
+| Método | Endpoint | Descripción | Body |
+|--------|----------|-------------|------|
+| `GET` | `/palas` | Listar todas las palas | - |
+| `GET` | `/palas/:id` | Obtener pala por ID | - |
+| `GET` | `/palas/jugador/:jugador` | Palas por jugador | - |
+| `POST` | `/palas` | Crear pala (admin) | `{ nombre, jugador, precio, descripcion, imagen }` |
+| `PUT` | `/palas/:id` | Actualizar pala (admin) | `{ nombre?, precio?, stock?, ... }` |
+| `DELETE` | `/palas/:id` | Eliminar pala (admin) | - |
+| `POST` | `/palas/seed` | Poblar BD con 8 palas | - |
+
+### 📰 Noticias
+
+| Método | Endpoint | Descripción | Body |
+|--------|----------|-------------|------|
+| `GET` | `/noticias` | Listar noticias | - |
+| `GET` | `/noticias/:id` | Obtener noticia | - |
+| `POST` | `/noticias` | Crear noticia (admin) | `{ titulo, descripcion, imagen }` |
+| `PUT` | `/noticias/:id` | Actualizar noticia (admin) | `{ titulo?, descripcion?, imagen? }` |
+| `DELETE` | `/noticias/:id` | Eliminar noticia (admin) | - |
+| `POST` | `/noticias/seed` | Poblar con 3 noticias | - |
+
+### 📦 Pedidos
+
+| Método | Endpoint | Descripción | Body |
+|--------|----------|-------------|------|
+| `POST` | `/pedidos` | Crear pedido | `{ usuario, productos[], direccionEnvio, datosPago }` |
+| `GET` | `/pedidos/:id` | Obtener pedido | - |
+| `GET` | `/pedidos/usuario/:userId` | Pedidos de un usuario | - |
+| `PUT` | `/pedidos/:id/estado` | Actualizar estado (admin) | `{ estado }` |
+| `PUT` | `/pedidos/:id/cancelar` | Cancelar pedido | - |
+
+---
+
+## 📂 Estructura del Proyecto
+
+```
+LowPadel/
+├── backend/                    # Backend API
+│   ├── src/
+│   │   ├── server.js          # Punto de entrada
+│   │   ├── models/            # Esquemas Mongoose
+│   │   │   ├── Usuario.js
+│   │   │   ├── Pala.js
+│   │   │   ├── Noticia.js
+│   │   │   └── Pedido.js
+│   │   ├── controllers/       # Lógica de negocio
+│   │   │   ├── usuarioController.js
+│   │   │   ├── palaController.js
+│   │   │   ├── noticiaController.js
+│   │   │   └── pedidoController.js
+│   │   ├── routes/            # Rutas API
+│   │   │   ├── usuarioRoutes.js
+│   │   │   ├── palaRoutes.js
+│   │   │   ├── noticiaRoutes.js
+│   │   │   └── pedidoRoutes.js
+│   │   ├── middlewares/
+│   │   │   └── errorHandler.js
+│   │   └── utils/
+│   │       └── multerConfig.js
+│   ├── package.json
+│   ├── vercel.json            # Config Vercel
+│   └── .env                   # Variables de entorno
+│
+├── src/                       # Frontend Astro
+│   ├── components/
+│   │   ├── aboutComponent.astro
+│   │   ├── chingoComponent.astro
+│   │   ├── coelloComponent.astro
+│   │   ├── contactoComponent.astro
+│   │   ├── galanComponent.astro
+│   │   ├── noticiasComponent.astro
+│   │   ├── palasAdminComponent.astro
+│   │   ├── palasComponent.astro
+│   │   ├── registerComponent.astro
+│   │   ├── tapiaComponent.astro
+│   │   └── Welcome.astro
+│   ├── layouts/
+│   │   └── Layout.astro       # Layout principal
+│   ├── pages/
+│   │   ├── index.astro        # Página principal
+│   │   ├── login.astro        # Login/Registro
+│   │   ├── perfil.astro       # Perfil de usuario
+│   │   ├── checkout.astro     # Proceso de compra
+│   │   ├── palas.astro        # Catálogo
+│   │   ├── noticias.astro
+│   │   ├── about.astro
+│   │   ├── contact.astro
+│   │   ├── chingo.astro
+│   │   ├── coello.astro
+│   │   ├── galan.astro
+│   │   └── tapia.astro
+│   └── styles/                # Estilos globales
+│
+├── public/                    # Recursos estáticos
+│   ├── Layout/
+│   │   └── logo.png
+│   ├── palas/                 # Imágenes de palas
+│   ├── scripts/
+│   │   ├── jugadores.js       # Lógica del catálogo
+│   │   ├── logo.js
+│   │   ├── nav.js
+│   │   └── usuario.js
+│   ├── styles/
+│   │   └── palas.css
+│   ├── videos/
+│   └── Welcome/               # Perfiles de jugadores
+│
+├── astro.config.mjs           # Config Astro
+├── package.json
+├── README.md                  # Este archivo
+├── INTEGRACION_API.md         # Guía de integración
+├── DEPLOY_BACKEND.md          # Guía de deployment
+└── ADMIN_INSTRUCTIONS.md      # Instrucciones admin
 ```
 
 ---
 
-## 🔐 Credenciales de Admin
+## 🔐 Sistema de Autenticación
+
+### Credenciales de Admin por Defecto
+
+```
+Email: admin@lowpadel.com
+Password: Admin01@
+```
+
+### Roles de Usuario
+
+- **Usuario Normal**: Puede comprar palas, ver pedidos, editar perfil
+- **Administrador**: Acceso completo a CRUD de palas, noticias y gestión de pedidos
+
+### Funcionalidades por Rol
+
+| Funcionalidad | Usuario | Admin |
+|--------------|---------|-------|
+| Ver catálogo | ✅ | ✅ |
+| Comprar palas | ✅ | ✅ |
+| Ver/editar perfil | ✅ | ✅ |
+| Historial de pedidos | ✅ | ✅ |
+| Crear/editar palas | ❌ | ✅ |
+| Crear/editar noticias | ❌ | ✅ |
+| Gestionar usuarios | ❌ | ✅ |
+| Actualizar estado de pedidos | ❌ | ✅ |
+
+---
+
+## 🚀 Deployment
+
+### Deploy en Vercel (Recomendado)
+
+#### Frontend
+
+```bash
+# Ya configurado para Vercel
+git push origin main
+# Vercel detectará cambios y desplegará automáticamente
+```
+
+#### Backend
+
+Ver guía completa en [DEPLOY_BACKEND.md](DEPLOY_BACKEND.md)
+
+```bash
+cd backend
+vercel --prod
+```
+
+**Variables de entorno requeridas en Vercel:**
+- `MONGO_URI`
+- `PORT`
+- `NODE_ENV`
+- `FRONTEND_URL`
+
+### MongoDB Atlas Setup
+
+1. Crea un cluster gratuito en [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+2. Crea una base de datos llamada `lowpadel`
+3. Añade `0.0.0.0/0` al IP Whitelist (necesario para Vercel)
+4. Copia la connection string a tu `.env`
+
+---
+
+## 📚 Documentación Adicional
+
+- 📖 [**INTEGRACION_API.md**](INTEGRACION_API.md) - Guía completa para integrar el backend con el frontend
+- 🚀 [**DEPLOY_BACKEND.md**](DEPLOY_BACKEND.md) - Instrucciones detalladas para desplegar en Vercel
+- 👨‍💼 [**ADMIN_INSTRUCTIONS.md**](ADMIN_INSTRUCTIONS.md) - Manual del panel de administración
+
+---
+
+## 🧪 Testing
+
+### Testing del Backend
+
+```powershell
+# Listar palas
+Invoke-RestMethod -Uri "http://localhost:5000/api/palas" -Method GET
+
+# Crear usuario
+$body = @{
+    nombre = "Juan Pérez"
+    email = "juan@test.com"
+    password = "Test123"
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri "http://localhost:5000/api/usuarios/registro" `
+    -Method POST -ContentType "application/json" -Body $body
+```
+
+### Testing del Frontend
+
+1. Navega a `http://localhost:4321`
+2. Prueba el registro/login
+3. Añade palas al carrito
+4. Completa un pedido de prueba
+5. Revisa el perfil y historial de pedidos
+
+---
+
+## 🐛 Troubleshooting
+
+### Error: "Cannot find module"
+
+```powershell
+# Reinstalar dependencias
+rm -r node_modules
+npm install
+```
+
+### Error: MongoDB Connection Failed
+
+- Verifica que tu IP esté en el whitelist de MongoDB Atlas
+- Comprueba las credenciales en `MONGO_URI`
+- Verifica que el cluster esté activo
+
+### Error: CORS Blocked
+
+- Asegúrate de que `FRONTEND_URL` en `.env` coincida con tu URL
+- Verifica que el backend esté corriendo en el puerto correcto
+
+### Las palas no se muestran
+
+1. Verifica que el backend esté corriendo
+2. Ejecuta el seed: `POST http://localhost:5000/api/palas/seed`
+3. Revisa la consola del navegador (F12) para errores
+
+---
+
+## 🤝 Contribuir
+
+Las contribuciones son bienvenidas. Por favor:
+
+1. Fork el proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+---
+
+## 📝 Roadmap
+
+- [x] Sistema de autenticación completo
+- [x] Carrito de compras
+- [x] Proceso de checkout
+- [x] Gestión de pedidos
+- [x] Panel de administración
+- [x] CRUD de palas y noticias
+- [ ] Implementar JWT para autenticación
+- [ ] Sistema de recuperación de contraseña
+- [ ] Filtros avanzados en el catálogo
+- [ ] Sistema de valoraciones
+- [ ] Integración con pasarela de pago real
+- [ ] Sistema de notificaciones por email
+- [ ] Chat de soporte en vivo
+- [ ] Modo oscuro/claro
+
+---
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
+
+---
+
+## 👨‍💻 Autor
+
+**Sergio Chiva**
+
+- GitHub: [@SergioChiva](https://github.com/SergioChiva)
+- Proyecto: [LowPadel](https://github.com/SergioChiva/LowPadel)
+
+---
+
+## 🙏 Agradecimientos
+
+- Imágenes de palas: Adidas, Nox, Head, Bullpadel
+- Jugadores destacados: Agustín Tapia, Alejandro Galán, Arturo Coello, Federico Chingotto
+- Comunidad de Astro y MongoDB
+
+---
+
+## 📧 Contacto
+
+¿Tienes preguntas o sugerencias? Abre un [issue](https://github.com/SergioChiva/LowPadel/issues) o contacta directamente.
+
+---
+
+<div align="center">
+
+**⭐ Si te gusta el proyecto, dale una estrella en GitHub ⭐**
+
+Hecho con ❤️ y ☕
+
+</div>
 
 Para acceder al panel de administración:
 

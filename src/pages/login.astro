@@ -1,0 +1,331 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+  <div class="auth-container">
+    <div class="auth-card">
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab active" data-tab="login">Iniciar Sesión</button>
+        <button class="tab" data-tab="registro">Registrarse</button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="loginForm" class="auth-form">
+        <h2>Bienvenido de nuevo</h2>
+        
+        <div class="form-group">
+          <label for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" required placeholder="tu@email.com">
+        </div>
+
+        <div class="form-group">
+          <label for="loginPassword">Contraseña</label>
+          <input type="password" id="loginPassword" required placeholder="••••••••">
+        </div>
+
+        <button type="submit" class="btn-submit">Iniciar Sesión</button>
+        
+        <p class="form-footer">¿Administrador? Usa tus credenciales especiales</p>
+      </form>
+
+      <!-- Register Form (hidden by default) -->
+      <form id="registerForm" class="auth-form hidden">
+        <h2>Crear cuenta nueva</h2>
+        
+        <div class="form-group">
+          <label for="regNombre">Nombre completo</label>
+          <input type="text" id="regNombre" required placeholder="Tu nombre">
+        </div>
+
+        <div class="form-group">
+          <label for="regEmail">Email</label>
+          <input type="email" id="regEmail" required placeholder="tu@email.com">
+        </div>
+
+        <div class="form-group">
+          <label for="regPassword">Contraseña</label>
+          <input type="password" id="regPassword" required placeholder="Mínimo 6 caracteres" minlength="6">
+        </div>
+
+        <div class="form-group">
+          <label for="regPasswordConfirm">Confirmar contraseña</label>
+          <input type="password" id="regPasswordConfirm" required placeholder="Repite tu contraseña">
+        </div>
+
+        <button type="submit" class="btn-submit">Registrarse</button>
+        
+        <p class="form-footer">Al registrarte, aceptas nuestros términos y condiciones</p>
+      </form>
+    </div>
+  </div>
+</Layout>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const tabs = document.querySelectorAll('.tab');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+
+    // Verificar si ya está logueado
+    const usuarioStorage = localStorage.getItem('usuario');
+    if (usuarioStorage) {
+      window.location.href = '/perfil';
+      return;
+    }
+
+    // Tabs
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        const tabName = tab.getAttribute('data-tab');
+        if (tabName === 'login') {
+          loginForm.classList.remove('hidden');
+          registerForm.classList.add('hidden');
+        } else {
+          loginForm.classList.add('hidden');
+          registerForm.classList.remove('hidden');
+        }
+      });
+    });
+
+    // Login
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      // Por ahora usamos localStorage, luego será con API
+      const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+      const usuario = usuarios.find(u => u.email === email && u.password === password);
+
+      // Verificar si es admin
+      if (email === 'admin@lowpadel.com' && password === 'Admin01@') {
+        const adminUser = {
+          nombre: 'Administrador',
+          email: email,
+          isAdmin: true,
+          fotoPerfil: 'https://images.icon-icons.com/1378/PNG/512/avatardefault_92824.png',
+          pedidos: []
+        };
+        localStorage.setItem('usuario', JSON.stringify(adminUser));
+        alert('✅ Bienvenido, Administrador');
+        window.location.href = '/';
+        return;
+      }
+
+      if (!usuario) {
+        alert('❌ Email o contraseña incorrectos');
+        return;
+      }
+
+      localStorage.setItem('usuario', JSON.stringify(usuario));
+      alert(`✅ Bienvenido, ${usuario.nombre}`);
+      window.location.href = '/perfil';
+    });
+
+    // Registro
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const nombre = document.getElementById('regNombre').value;
+      const email = document.getElementById('regEmail').value;
+      const password = document.getElementById('regPassword').value;
+      const passwordConfirm = document.getElementById('regPasswordConfirm').value;
+
+      // Validar contraseñas
+      if (password !== passwordConfirm) {
+        alert('❌ Las contraseñas no coinciden');
+        return;
+      }
+
+      // Verificar si el email ya existe
+      const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+      if (usuarios.find(u => u.email === email)) {
+        alert('❌ Este email ya está registrado');
+        return;
+      }
+
+      // Crear nuevo usuario
+      const nuevoUsuario = {
+        id: Date.now(),
+        nombre,
+        email,
+        password,
+        fotoPerfil: 'https://images.icon-icons.com/1378/PNG/512/avatardefault_92824.png',
+        isAdmin: false,
+        pedidos: [],
+        createdAt: new Date().toISOString()
+      };
+
+      usuarios.push(nuevoUsuario);
+      localStorage.setItem('usuarios', JSON.stringify(usuarios));
+      localStorage.setItem('usuario', JSON.stringify(nuevoUsuario));
+
+      alert('✅ Cuenta creada exitosamente');
+      window.location.href = '/perfil';
+    });
+  });
+</script>
+
+<style>
+  .auth-container {
+    min-height: calc(100vh - 200px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+  }
+
+  .auth-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 30px;
+    padding: 0;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 20px 60px rgba(0, 200, 150, 0.3), 0 0 30px rgba(147, 51, 234, 0.2);
+    overflow: hidden;
+  }
+
+  .tabs {
+    display: flex;
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .tab {
+    flex: 1;
+    padding: 1.2rem;
+    border: none;
+    background: transparent;
+    color: var(--text-light);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .tab.active {
+    color: var(--primary);
+    background: rgba(0, 200, 150, 0.1);
+  }
+
+  .tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+  }
+
+  .tab:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .auth-form {
+    padding: 2.5rem;
+  }
+
+  .auth-form h2 {
+    color: var(--primary);
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group label {
+    display: block;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .form-group input {
+    width: 100%;
+    padding: 0.9rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: var(--text-light);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+
+  .form-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 15px rgba(0, 200, 150, 0.3);
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .form-group input::placeholder {
+    color: rgba(241, 245, 249, 0.4);
+  }
+
+  .btn-submit {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    margin-top: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 6px 20px rgba(0, 200, 150, 0.4);
+  }
+
+  .btn-submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 200, 150, 0.5);
+    background: linear-gradient(135deg, var(--primary-light), var(--accent-light));
+  }
+
+  .btn-submit:active {
+    transform: translateY(-1px);
+  }
+
+  .form-footer {
+    text-align: center;
+    color: rgba(241, 245, 249, 0.6);
+    font-size: 0.85rem;
+    margin-top: 1.5rem;
+  }
+
+  /* Animación de entrada */
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .auth-card {
+    animation: slideIn 0.5s ease-out;
+  }
+</style>

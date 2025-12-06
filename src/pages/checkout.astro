@@ -1,0 +1,572 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+  <div class="checkout-container">
+    <h1>🛒 Finalizar Compra</h1>
+
+    <div class="checkout-grid">
+      <!-- Resumen del Pedido -->
+      <div class="order-summary">
+        <h2>Resumen del Pedido</h2>
+        <div id="productosResumen"></div>
+        
+        <div class="totals">
+          <div class="total-line">
+            <span>Subtotal:</span>
+            <span id="subtotal">0€</span>
+          </div>
+          <div class="total-line">
+            <span>Envío:</span>
+            <span id="envio">5€</span>
+          </div>
+          <div class="total-line total-final">
+            <span>Total:</span>
+            <span id="total">0€</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulario de Pago -->
+      <div class="payment-form-container">
+        <form id="checkoutForm">
+          <h2>Datos de Envío</h2>
+          
+          <div class="form-group">
+            <label for="nombre">Nombre completo *</label>
+            <input type="text" id="nombre" required>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email *</label>
+            <input type="email" id="email" required>
+          </div>
+
+          <div class="form-group">
+            <label for="telefono">Teléfono *</label>
+            <input type="tel" id="telefono" required placeholder="+34 600 000 000">
+          </div>
+
+          <div class="form-group">
+            <label for="direccion">Dirección *</label>
+            <input type="text" id="direccion" required placeholder="Calle, número, piso">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="ciudad">Ciudad *</label>
+              <input type="text" id="ciudad" required>
+            </div>
+
+            <div class="form-group">
+              <label for="codigoPostal">Código Postal *</label>
+              <input type="text" id="codigoPostal" required pattern="[0-9]{5}" placeholder="28001">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="pais">País</label>
+            <select id="pais">
+              <option value="España">España</option>
+              <option value="Portugal">Portugal</option>
+              <option value="Francia">Francia</option>
+            </select>
+          </div>
+
+          <h2 style="margin-top: 2rem;">Datos de Pago</h2>
+          <p class="payment-info">💳 Pago simulado - No se realizará ningún cargo real</p>
+
+          <div class="form-group">
+            <label for="numeroTarjeta">Número de Tarjeta *</label>
+            <input type="text" id="numeroTarjeta" required placeholder="1234 5678 9012 3456" maxlength="19">
+          </div>
+
+          <div class="form-group">
+            <label for="nombreTitular">Nombre del Titular *</label>
+            <input type="text" id="nombreTitular" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fechaExpiracion">Fecha de Expiración *</label>
+              <input type="text" id="fechaExpiracion" required placeholder="MM/AA" maxlength="5">
+            </div>
+
+            <div class="form-group">
+              <label for="cvv">CVV *</label>
+              <input type="text" id="cvv" required placeholder="123" maxlength="3">
+            </div>
+          </div>
+
+          <button type="submit" class="btn-pay">
+            <span>🔒 Pagar Ahora</span>
+          </button>
+
+          <p class="security-info">
+            🛡️ Conexión segura SSL - Tus datos están protegidos
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Confirmación -->
+  <div id="modalConfirmacion" class="modal hidden">
+    <div class="modal-content">
+      <div class="success-animation">
+        <div class="checkmark">✓</div>
+      </div>
+      <h2>¡Compra Realizada!</h2>
+      <p>Tu pedido ha sido procesado exitosamente.</p>
+      <p class="order-number">Número de pedido: <strong id="numeroPedido"></strong></p>
+      <p>Recibirás un email de confirmación en breve.</p>
+      <button id="btnVerPedidos" class="btn-primary">Ver Mis Pedidos</button>
+      <button id="btnSeguirComprando" class="btn-secondary">Seguir Comprando</button>
+    </div>
+  </div>
+</Layout>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Verificar si hay carrito
+    const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
+    
+    if (carrito.length === 0) {
+      alert('Tu carrito está vacío');
+      window.location.href = '/palas';
+      return;
+    }
+
+    // Verificar si hay usuario logueado
+    const usuarioStorage = localStorage.getItem('usuario');
+    if (!usuarioStorage) {
+      alert('Debes iniciar sesión para continuar');
+      localStorage.setItem('redirectAfterLogin', '/checkout');
+      window.location.href = '/login';
+      return;
+    }
+
+    const usuario = JSON.parse(usuarioStorage);
+
+    // Prellenar datos del usuario
+    document.getElementById('nombre').value = usuario.nombre || '';
+    document.getElementById('email').value = usuario.email || '';
+
+    // Mostrar resumen del pedido
+    mostrarResumen(carrito);
+
+    // Formatear número de tarjeta
+    document.getElementById('numeroTarjeta').addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\s/g, '');
+      let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+      e.target.value = formattedValue;
+    });
+
+    // Formatear fecha de expiración
+    document.getElementById('fechaExpiracion').addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length >= 2) {
+        value = value.slice(0, 2) + '/' + value.slice(2, 4);
+      }
+      e.target.value = value;
+    });
+
+    // Solo números en CVV
+    document.getElementById('cvv').addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/\D/g, '');
+    });
+
+    // Solo números en código postal
+    document.getElementById('codigoPostal').addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/\D/g, '');
+    });
+
+    // Enviar formulario
+    document.getElementById('checkoutForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      procesarPago(carrito, usuario);
+    });
+
+    // Botones del modal
+    document.getElementById('btnVerPedidos').addEventListener('click', () => {
+      window.location.href = '/perfil';
+    });
+
+    document.getElementById('btnSeguirComprando').addEventListener('click', () => {
+      window.location.href = '/palas';
+    });
+  });
+
+  function mostrarResumen(carrito) {
+    const container = document.getElementById('productosResumen');
+    let subtotal = 0;
+
+    container.innerHTML = carrito.map(item => {
+      const precio = parseFloat(item.precio);
+      const cantidad = item.cantidad || 1;
+      const totalItem = precio * cantidad;
+      subtotal += totalItem;
+
+      return `
+        <div class="producto-resumen">
+          <img src="${item.imagen}" alt="${item.nombre}">
+          <div class="producto-info">
+            <h3>${item.nombre}</h3>
+            <p>${item.jugador}</p>
+            <p class="cantidad">Cantidad: ${cantidad}</p>
+          </div>
+          <div class="producto-precio">
+            ${totalItem.toFixed(2)}€
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    const envio = 5;
+    const total = subtotal + envio;
+
+    document.getElementById('subtotal').textContent = subtotal.toFixed(2) + '€';
+    document.getElementById('total').textContent = total.toFixed(2) + '€';
+  }
+
+  function procesarPago(carrito, usuario) {
+    // Simular procesamiento
+    const btnSubmit = document.querySelector('.btn-pay');
+    btnSubmit.disabled = true;
+    btnSubmit.innerHTML = '<span>Procesando...</span>';
+
+    setTimeout(() => {
+      // Crear pedido
+      const pedido = {
+        id: Date.now(),
+        usuario: usuario.email,
+        productos: carrito.map(item => ({
+          nombre: item.nombre,
+          jugador: item.jugador,
+          precio: parseFloat(item.precio),
+          cantidad: item.cantidad || 1
+        })),
+        total: carrito.reduce((sum, item) => sum + (parseFloat(item.precio) * (item.cantidad || 1)), 0) + 5,
+        estado: 'pendiente',
+        fecha: new Date().toISOString(),
+        direccion: {
+          calle: document.getElementById('direccion').value,
+          ciudad: document.getElementById('ciudad').value,
+          codigoPostal: document.getElementById('codigoPostal').value,
+          pais: document.getElementById('pais').value
+        },
+        datosPago: {
+          numeroTarjeta: '**** **** **** ' + document.getElementById('numeroTarjeta').value.slice(-4),
+          nombreTitular: document.getElementById('nombreTitular').value,
+          fechaExpiracion: document.getElementById('fechaExpiracion').value
+        }
+      };
+
+      // Guardar pedido
+      const pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]');
+      pedidos.push(pedido);
+      localStorage.setItem('pedidos', JSON.stringify(pedidos));
+
+      // Añadir pedido al usuario
+      usuario.pedidos = usuario.pedidos || [];
+      usuario.pedidos.push(pedido);
+      localStorage.setItem('usuario', JSON.stringify(usuario));
+
+      // Limpiar carrito
+      localStorage.removeItem('carrito');
+
+      // Mostrar modal de confirmación
+      document.getElementById('numeroPedido').textContent = '#' + pedido.id;
+      document.getElementById('modalConfirmacion').classList.remove('hidden');
+    }, 2000);
+  }
+</script>
+
+<style>
+  .checkout-container {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 2rem;
+  }
+
+  h1 {
+    text-align: center;
+    color: var(--primary);
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-shadow: 0 2px 10px rgba(0, 200, 150, 0.3);
+  }
+
+  .checkout-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 2rem;
+  }
+
+  @media (max-width: 968px) {
+    .checkout-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .order-summary, .payment-form-container {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  h2 {
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+  }
+
+  .producto-resumen {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    margin-bottom: 1rem;
+  }
+
+  .producto-resumen img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    background: white;
+    border-radius: 10px;
+    padding: 5px;
+  }
+
+  .producto-info {
+    flex: 1;
+  }
+
+  .producto-info h3 {
+    color: var(--text-light);
+    font-size: 1rem;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .producto-info p {
+    color: var(--primary-light);
+    font-size: 0.9rem;
+    margin: 0.25rem 0;
+  }
+
+  .producto-precio {
+    color: var(--primary);
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  .totals {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 2px solid rgba(0, 200, 150, 0.3);
+  }
+
+  .total-line {
+    display: flex;
+    justify-content: space-between;
+    color: var(--text-light);
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
+  }
+
+  .total-final {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary);
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 2px solid rgba(0, 200, 150, 0.3);
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group label {
+    display: block;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+
+  .form-group input, .form-group select {
+    width: 100%;
+    padding: 0.8rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: var(--text-light);
+    font-size: 1rem;
+  }
+
+  .form-group input:focus, .form-group select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 10px rgba(0, 200, 150, 0.3);
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .payment-info {
+    background: rgba(0, 200, 150, 0.1);
+    border: 1px solid rgba(0, 200, 150, 0.3);
+    border-radius: 10px;
+    padding: 1rem;
+    color: var(--primary-light);
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .btn-pay {
+    width: 100%;
+    padding: 1.2rem;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    border: none;
+    border-radius: 15px;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+    box-shadow: 0 6px 20px rgba(0, 200, 150, 0.4);
+  }
+
+  .btn-pay:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 200, 150, 0.5);
+  }
+
+  .btn-pay:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .security-info {
+    text-align: center;
+    color: rgba(241, 245, 249, 0.6);
+    font-size: 0.9rem;
+    margin-top: 1rem;
+  }
+
+  /* Modal */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+  }
+
+  .modal.hidden {
+    display: none;
+  }
+
+  .modal-content {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 200, 150, 0.3);
+    border-radius: 30px;
+    padding: 3rem;
+    text-align: center;
+    max-width: 500px;
+    box-shadow: 0 20px 60px rgba(0, 200, 150, 0.4);
+  }
+
+  .success-animation {
+    margin-bottom: 2rem;
+  }
+
+  .checkmark {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    font-size: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    animation: scaleIn 0.5s ease-out;
+    box-shadow: 0 0 30px rgba(0, 200, 150, 0.6);
+  }
+
+  @keyframes scaleIn {
+    from {
+      transform: scale(0);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .modal-content h2 {
+    color: var(--primary);
+    margin-bottom: 1rem;
+    font-size: 2rem;
+  }
+
+  .modal-content p {
+    color: var(--text-light);
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+  }
+
+  .order-number {
+    background: rgba(0, 200, 150, 0.1);
+    border: 1px solid rgba(0, 200, 150, 0.3);
+    border-radius: 10px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  .btn-primary, .btn-secondary {
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 0.5rem;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 200, 150, 0.4);
+  }
+
+  .btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-light);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+</style>
