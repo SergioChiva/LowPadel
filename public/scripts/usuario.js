@@ -78,18 +78,19 @@ if (form) {
                 nick,
                 email,
                 imagen: fotoBase64 || "",
-                admin: isAdmin
+                admin: isAdmin,
+                password // Guardamos la contraseña (en producción se hashearía)
             };
 
             localStorage.setItem("usuario", JSON.stringify(usuario));
-            mostrarPerfil(usuario);
             
-            // Notificar si es admin
+            // Notificar si es admin y redirigir a perfil
             if (isAdmin) {
-                setTimeout(() => {
-                    alert("✅ ¡Bienvenido Administrador! Tienes acceso al panel de administración en Noticias y Palas.");
-                }, 500);
+                alert("✅ ¡Bienvenido Administrador! Tienes acceso al panel de administración en Noticias y Palas.");
             }
+            
+            // Redirigir a la página de perfil mejorada
+            window.location.href = "/perfil";
         }
     });
 }
@@ -133,7 +134,7 @@ window.addEventListener("DOMContentLoaded", () => {
         // 🔹 Cambiar el texto del enlace "Cuenta"
         if (linkCuenta) {
             linkCuenta.textContent = usuario.nick || "Mi cuenta";
-            linkCuenta.href = "/register"; // o tu ruta al perfil
+            linkCuenta.href = "/perfil"; // Redirigir al perfil mejorado
         }
 
         // 🔹 Si estás en la página de registro, mostrar directamente el perfil

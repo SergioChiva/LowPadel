@@ -107,14 +107,16 @@ import Layout from '../layouts/Layout.astro';
       if (email === 'admin@lowpadel.com' && password === 'Admin01@') {
         const adminUser = {
           nombre: 'Administrador',
+          nick: 'admin',
           email: email,
-          isAdmin: true,
-          fotoPerfil: 'https://images.icon-icons.com/1378/PNG/512/avatardefault_92824.png',
+          password: password,
+          admin: true,
+          imagen: 'https://images.icon-icons.com/1378/PNG/512/avatardefault_92824.png',
           pedidos: []
         };
         localStorage.setItem('usuario', JSON.stringify(adminUser));
         alert('✅ Bienvenido, Administrador');
-        window.location.href = '/';
+        window.location.href = '/perfil';
         return;
       }
 
@@ -154,10 +156,11 @@ import Layout from '../layouts/Layout.astro';
       const nuevoUsuario = {
         id: Date.now(),
         nombre,
+        nick: nombre.split(' ')[0].toLowerCase(), // Usar primer nombre como nick por defecto
         email,
         password,
-        fotoPerfil: 'https://images.icon-icons.com/1378/PNG/512/avatardefault_92824.png',
-        isAdmin: false,
+        imagen: 'https://images.icon-icons.com/1378/PNG/512/avatardefault_92824.png',
+        admin: false,
         pedidos: [],
         createdAt: new Date().toISOString()
       };
