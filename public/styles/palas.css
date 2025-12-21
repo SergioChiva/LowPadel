@@ -238,7 +238,7 @@ header p {
     text-align: justify;
 }
 
-/* Botón Comprar */
+/* Botón Comprar / Añadir al Carrito */
 .btn-comprar {
     background: linear-gradient(135deg, var(--color-principal) 0%, var(--color-acento) 100%);
     color: var(--blanco);
@@ -255,6 +255,16 @@ header p {
     position: relative;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0, 200, 150, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.btn-comprar svg {
+    position: relative;
+    z-index: 1;
 }
 
 .btn-comprar::before {
@@ -279,6 +289,19 @@ header p {
     background: linear-gradient(135deg, var(--primary-light) 0%, var(--color-acento-light) 100%);
     transform: translateY(-4px) scale(1.02);
     box-shadow: 0 8px 25px rgba(0, 200, 150, 0.4), 0 0 20px rgba(147, 51, 234, 0.2);
+}
+
+.btn-comprar:active {
+    transform: translateY(-2px) scale(1.01);
+}
+
+.btn-comprar:hover svg {
+    animation: cartBounce 0.5s ease-in-out;
+}
+
+@keyframes cartBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
 }
 
 /* ==================================== */
