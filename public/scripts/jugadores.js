@@ -137,45 +137,43 @@ function agregarAlCarrito(pala) {
     if (indiceExistente !== -1) {
         // Si ya existe, aumentar cantidad
         carrito[indiceExistente].cantidad += 1;
+        mostrarNotificacion(`✅ ${pala.nombre} añadida al carrito (${carrito[indiceExistente].cantidad})`, 'success');
     } else {
         // Si no existe, agregar
         carrito.push(pala);
+        mostrarNotificacion(`✅ ${pala.nombre} añadida al carrito`, 'success');
     }
     
     localStorage.setItem('carrito', JSON.stringify(carrito));
     
-    // Mostrar notificación
-    mostrarNotificacion('✅ Pala añadida al carrito');
-    actualizarContadorCarrito();
+    // Actualizar contador (usar función global si existe)
+    if (typeof window.actualizarContadorCarrito === 'function') {
+        window.actualizarContadorCarrito();
+    }
 }
 
-// Función para mostrar notificación
-function mostrarNotificacion(mensaje) {
+// Función para mostrar notificación mejorada
+function mostrarNotificacion(mensaje, tipo = 'success') {
     const notif = document.createElement('div');
-    notif.className = 'notificacion-carrito';
-    notif.textContent = mensaje;
-    notif.style.cssText = `
-        position: fixed;
-        top: 100px;
-        right: 20px;
-        background: linear-gradient(135deg, #00c896, #6ee7b7);
-        color: white;
-        padding: 1rem 2rem;
-        border-radius: 10px;
-        box-shadow: 0 4px 15px rgba(0, 200, 150, 0.4);
-        z-index: 10000;
-        animation: slideIn 0.3s ease-out;
+    notif.className = `notificacion-carrito notif-${tipo}`;
+    notif.innerHTML = `
+        <div class="notif-content">
+            <span class="notif-mensaje">${mensaje}</span>
+            <button class="notif-close" onclick="this.parentElement.parentElement.remove()">×</button>
+        </div>
     `;
     
     document.body.appendChild(notif);
     
+    setTimeout(() => notif.classList.add('show'), 100);
+    
     setTimeout(() => {
-        notif.style.animation = 'slideOut 0.3s ease-out';
+        notif.classList.remove('show');
         setTimeout(() => notif.remove(), 300);
-    }, 2500);
+    }, 3000);
 }
 
-// Función para actualizar contador del carrito
+// Función para actualizar contador del carrito (fallback)
 function actualizarContadorCarrito() {
     const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
     const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
@@ -188,12 +186,20 @@ function actualizarContadorCarrito() {
     }
 }
 
-// Actualizar contador al cargar
-document.addEventListener('DOMContentLoaded', () => {
-    actualizarContadorCarrito();
-});
+// Actualizar contador al cargar (fallback si el script global no está cargado)
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof window.actualizarContadorCarrito !== 'function') {
+            actualizarContadorCarrito();
+        }
+    });
+} else {
+    if (typeof window.actualizarContadorCarrito !== 'function') {
+        actualizarContadorCarrito();
+    }
+}
 
-// Estilos para las animaciones
+// Estilos para las animaciones y notificaciones
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideIn {
@@ -216,6 +222,62 @@ style.textContent = `
             transform: translateX(400px);
             opacity: 0;
         }
+    }
+
+    .notificacion-carrito {
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        z-index: 10000;
+        transform: translateX(400px);
+        transition: transform 0.3s ease;
+        min-width: 300px;
+    }
+
+    .notificacion-carrito.show {
+        transform: translateX(0);
+    }
+
+    .notificacion-carrito.notif-success {
+        background: linear-gradient(135deg, #00c896, #6ee7b7);
+        box-shadow: 0 8px 25px rgba(0, 200, 150, 0.4);
+    }
+
+    .notif-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        color: white;
+        font-weight: 600;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .notif-mensaje {
+        flex: 1;
+    }
+
+    .notif-close {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: white;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 18px;
+        line-height: 1;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .notif-close:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.1);
     }
 `;
 document.head.appendChild(style);

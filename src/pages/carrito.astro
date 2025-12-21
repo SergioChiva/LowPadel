@@ -1,0 +1,704 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+  <div class="carrito-page">
+    <div class="carrito-header">
+      <h1>
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        Mi Carrito
+      </h1>
+      <button id="btnVaciarCarrito" class="btn-vaciar">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="3 6 5 6 21 6"></polyline>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        </svg>
+        Vaciar Carrito
+      </button>
+    </div>
+
+    <div id="carritoVacio" class="carrito-vacio hidden">
+      <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="9" cy="21" r="1"></circle>
+        <circle cx="20" cy="21" r="1"></circle>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+      </svg>
+      <h2>Tu carrito está vacío</h2>
+      <p>Añade productos para comenzar tu compra</p>
+      <a href="/palas" class="btn-primary">Ver Productos</a>
+    </div>
+
+    <div id="carritoContenido" class="carrito-contenido">
+      <div class="productos-lista" id="productosLista">
+        <!-- Productos se insertan aquí con JS -->
+      </div>
+
+      <div class="resumen-carrito">
+        <div class="resumen-card">
+          <h2>Resumen del Pedido</h2>
+          
+          <div class="resumen-linea">
+            <span>Subtotal (<span id="cantidadItems">0</span> productos)</span>
+            <span id="subtotalCarrito">0€</span>
+          </div>
+
+          <div class="resumen-linea">
+            <span>Envío</span>
+            <span id="envioCarrito" class="envio-gratis">GRATIS</span>
+          </div>
+
+          <div class="resumen-separador"></div>
+
+          <div class="resumen-total">
+            <span>Total</span>
+            <span id="totalCarrito">0€</span>
+          </div>
+
+          <button id="btnProcederPago" class="btn-checkout">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+              <line x1="1" y1="10" x2="23" y2="10"></line>
+            </svg>
+            Proceder al Pago
+          </button>
+
+          <div class="metodos-pago">
+            <p>Aceptamos:</p>
+            <div class="iconos-pago">
+              <span>💳 Visa</span>
+              <span>💳 Mastercard</span>
+              <span>💳 Amex</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="garantias">
+          <div class="garantia-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            </svg>
+            <div>
+              <strong>Envío gratuito</strong>
+              <span>En pedidos superiores a 50€</span>
+            </div>
+          </div>
+          <div class="garantia-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            <div>
+              <strong>Compra segura</strong>
+              <span>Pago 100% protegido</span>
+            </div>
+          </div>
+          <div class="garantia-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+            </svg>
+            <div>
+              <strong>Devolución fácil</strong>
+              <span>30 días para devoluciones</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    cargarCarrito();
+
+    // Botón vaciar carrito
+    document.getElementById('btnVaciarCarrito').addEventListener('click', () => {
+      if (confirm('¿Estás seguro de que quieres vaciar el carrito?')) {
+        localStorage.removeItem('carrito');
+        cargarCarrito();
+        mostrarNotificacion('🗑️ Carrito vaciado', 'info');
+        actualizarContadorCarrito();
+      }
+    });
+
+    // Botón proceder al pago
+    document.getElementById('btnProcederPago').addEventListener('click', () => {
+      window.location.href = '/checkout';
+    });
+  });
+
+  function cargarCarrito() {
+    const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
+    
+    if (carrito.length === 0) {
+      document.getElementById('carritoVacio').classList.remove('hidden');
+      document.getElementById('carritoContenido').classList.add('hidden');
+      return;
+    }
+
+    document.getElementById('carritoVacio').classList.add('hidden');
+    document.getElementById('carritoContenido').classList.remove('hidden');
+
+    mostrarProductos(carrito);
+    actualizarResumen(carrito);
+  }
+
+  function mostrarProductos(carrito) {
+    const container = document.getElementById('productosLista');
+    
+    container.innerHTML = carrito.map((item, index) => `
+      <div class="producto-carrito" data-index="${index}">
+        <div class="producto-imagen">
+          <img src="${item.imagen}" alt="${item.nombre}">
+        </div>
+        <div class="producto-info">
+          <h3>${item.nombre}</h3>
+          <p class="producto-jugador">${item.jugador || 'LowPadel'}</p>
+          <p class="producto-precio">${item.precio}€</p>
+        </div>
+        <div class="producto-cantidad">
+          <button class="btn-cantidad" onclick="cambiarCantidad(${index}, -1)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+          <span class="cantidad">${item.cantidad}</span>
+          <button class="btn-cantidad" onclick="cambiarCantidad(${index}, 1)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="producto-subtotal">
+          <p class="subtotal-label">Subtotal</p>
+          <p class="subtotal-precio">${(parseFloat(item.precio) * item.cantidad).toFixed(2)}€</p>
+        </div>
+        <button class="btn-eliminar" onclick="eliminarProducto(${index})" title="Eliminar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <line x1="10" y1="11" x2="10" y2="17"></line>
+            <line x1="14" y1="11" x2="14" y2="17"></line>
+          </svg>
+        </button>
+      </div>
+    `).join('');
+  }
+
+  function actualizarResumen(carrito) {
+    const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+    const subtotal = carrito.reduce((sum, item) => sum + (parseFloat(item.precio) * item.cantidad), 0);
+    const envio = subtotal >= 50 ? 0 : 5;
+    const total = subtotal + envio;
+
+    document.getElementById('cantidadItems').textContent = totalItems;
+    document.getElementById('subtotalCarrito').textContent = subtotal.toFixed(2) + '€';
+    
+    const envioElement = document.getElementById('envioCarrito');
+    if (envio === 0) {
+      envioElement.textContent = 'GRATIS';
+      envioElement.className = 'envio-gratis';
+    } else {
+      envioElement.textContent = envio.toFixed(2) + '€';
+      envioElement.className = '';
+    }
+    
+    document.getElementById('totalCarrito').textContent = total.toFixed(2) + '€';
+  }
+
+  function cambiarCantidad(index, cambio) {
+    const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
+    
+    if (carrito[index]) {
+      carrito[index].cantidad += cambio;
+      
+      if (carrito[index].cantidad <= 0) {
+        eliminarProducto(index);
+        return;
+      }
+      
+      localStorage.setItem('carrito', JSON.stringify(carrito));
+      cargarCarrito();
+      actualizarContadorCarrito();
+    }
+  }
+
+  function eliminarProducto(index) {
+    const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
+    carrito.splice(index, 1);
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+    cargarCarrito();
+    actualizarContadorCarrito();
+    mostrarNotificacion('🗑️ Producto eliminado del carrito', 'info');
+  }
+
+  function actualizarContadorCarrito() {
+    const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
+    const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+    
+    const badge = document.getElementById('carrito-count');
+    if (badge) {
+      badge.textContent = totalItems;
+      badge.style.display = totalItems > 0 ? 'flex' : 'none';
+    }
+  }
+
+  function mostrarNotificacion(mensaje, tipo = 'success') {
+    const notif = document.createElement('div');
+    notif.className = `notificacion notif-${tipo}`;
+    notif.textContent = mensaje;
+    document.body.appendChild(notif);
+    
+    setTimeout(() => notif.classList.add('show'), 100);
+    
+    setTimeout(() => {
+      notif.classList.remove('show');
+      setTimeout(() => notif.remove(), 300);
+    }, 3000);
+  }
+</script>
+
+<style>
+  .carrito-page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+    min-height: calc(100vh - 200px);
+  }
+
+  .carrito-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(0, 200, 150, 0.2);
+  }
+
+  .carrito-header h1 {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--primary);
+    font-size: 2.5rem;
+    font-weight: 700;
+  }
+
+  .btn-vaciar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    background: rgba(244, 67, 54, 0.1);
+    border: 1px solid rgba(244, 67, 54, 0.3);
+    color: #f44336;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .btn-vaciar:hover {
+    background: rgba(244, 67, 54, 0.2);
+    transform: translateY(-2px);
+  }
+
+  /* Carrito Vacío */
+  .carrito-vacio {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-light);
+  }
+
+  .carrito-vacio svg {
+    opacity: 0.2;
+    margin-bottom: 2rem;
+  }
+
+  .carrito-vacio h2 {
+    font-size: 2rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+  }
+
+  .carrito-vacio p {
+    opacity: 0.7;
+    margin-bottom: 2rem;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  /* Carrito con Contenido */
+  .carrito-contenido {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 2rem;
+  }
+
+  /* Lista de Productos */
+  .productos-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .producto-carrito {
+    display: grid;
+    grid-template-columns: 100px 1fr auto auto auto;
+    gap: 1.5rem;
+    align-items: center;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+  }
+
+  .producto-carrito:hover {
+    transform: translateY(-3px);
+    border-color: var(--primary);
+    box-shadow: 0 8px 25px rgba(0, 200, 150, 0.2);
+  }
+
+  .producto-imagen {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .producto-imagen img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .producto-info h3 {
+    color: var(--text-light);
+    font-size: 1.1rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .producto-jugador {
+    color: var(--primary-light);
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-bottom: 0.5rem;
+  }
+
+  .producto-precio {
+    color: var(--primary);
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+
+  /* Cantidad */
+  .producto-cantidad {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+  }
+
+  .btn-cantidad {
+    width: 32px;
+    height: 32px;
+    background: rgba(0, 200, 150, 0.2);
+    border: 1px solid rgba(0, 200, 150, 0.3);
+    border-radius: 6px;
+    color: var(--primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+
+  .btn-cantidad:hover {
+    background: rgba(0, 200, 150, 0.3);
+    transform: scale(1.1);
+  }
+
+  .cantidad {
+    color: var(--text-light);
+    font-weight: 700;
+    font-size: 1.1rem;
+    min-width: 30px;
+    text-align: center;
+  }
+
+  /* Subtotal */
+  .producto-subtotal {
+    text-align: right;
+  }
+
+  .subtotal-label {
+    color: var(--primary-light);
+    font-size: 0.85rem;
+    opacity: 0.8;
+    margin-bottom: 0.3rem;
+  }
+
+  .subtotal-precio {
+    color: var(--text-light);
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+
+  /* Botón Eliminar */
+  .btn-eliminar {
+    width: 40px;
+    height: 40px;
+    background: rgba(244, 67, 54, 0.1);
+    border: 1px solid rgba(244, 67, 54, 0.3);
+    border-radius: 8px;
+    color: #f44336;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+
+  .btn-eliminar:hover {
+    background: rgba(244, 67, 54, 0.2);
+    transform: scale(1.1);
+  }
+
+  /* Resumen Carrito */
+  .resumen-carrito {
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+  }
+
+  .resumen-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 200, 150, 0.2);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .resumen-card h2 {
+    color: var(--primary);
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .resumen-linea {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+    font-size: 1rem;
+  }
+
+  .envio-gratis {
+    color: #4caf50 !important;
+    font-weight: 700;
+  }
+
+  .resumen-separador {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    margin: 1.5rem 0;
+  }
+
+  .resumen-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 2rem;
+  }
+
+  .btn-checkout {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    padding: 1.2rem;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .btn-checkout:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 200, 150, 0.5);
+  }
+
+  .metodos-pago {
+    margin-top: 1.5rem;
+    text-align: center;
+    color: var(--text-light);
+    opacity: 0.8;
+  }
+
+  .metodos-pago p {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .iconos-pago {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    font-size: 0.85rem;
+  }
+
+  /* Garantías */
+  .garantias {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    padding: 1.5rem;
+  }
+
+  .garantia-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    color: var(--text-light);
+  }
+
+  .garantia-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .garantia-item svg {
+    color: var(--primary);
+    flex-shrink: 0;
+  }
+
+  .garantia-item strong {
+    display: block;
+    margin-bottom: 0.2rem;
+    font-size: 0.95rem;
+  }
+
+  .garantia-item span {
+    font-size: 0.85rem;
+    opacity: 0.7;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 200, 150, 0.4);
+  }
+
+  /* Notificaciones */
+  .notificacion {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    z-index: 10000;
+    transform: translateX(400px);
+    transition: transform 0.3s ease;
+  }
+
+  .notificacion.show {
+    transform: translateX(0);
+  }
+
+  .notif-success {
+    background: linear-gradient(135deg, #4caf50, #388e3c);
+    color: white;
+  }
+
+  .notif-info {
+    background: linear-gradient(135deg, #2196f3, #1976d2);
+    color: white;
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .carrito-contenido {
+      grid-template-columns: 1fr;
+    }
+
+    .resumen-carrito {
+      position: static;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .carrito-page {
+      padding: 1rem;
+    }
+
+    .carrito-header {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .carrito-header h1 {
+      font-size: 2rem;
+    }
+
+    .producto-carrito {
+      grid-template-columns: 80px 1fr;
+      gap: 1rem;
+    }
+
+    .producto-imagen {
+      width: 80px;
+      height: 80px;
+    }
+
+    .producto-cantidad,
+    .producto-subtotal,
+    .btn-eliminar {
+      grid-column: 1 / -1;
+      justify-self: stretch;
+    }
+
+    .producto-cantidad {
+      justify-content: center;
+    }
+  }
+</style>
