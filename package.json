@@ -10,7 +10,11 @@
   },
   "dependencies": {
     "@astrojs/vercel": "^9.0.2",
-    "astro": "^5.12.4"
+    "astro": "^5.12.4",
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.2.3",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.0.2"
   },
   "description": "```sh npm create astro@latest -- --template basics ```",
   "main": "index.js",

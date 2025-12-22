@@ -291,6 +291,11 @@
         box-shadow: 0 8px 25px rgba(0, 200, 150, 0.4);
     }
 
+    .notificacion-carrito.notif-error {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+    }
+
     .notif-content {
         display: flex;
         align-items: center;
@@ -468,33 +473,39 @@
 
 <main id="palas"></main>
 
-<script>
-    // Definir tipos
-    type Pala = {
-        imagen: string;
-        nombrePala: string;
-        precio: string;
-        descripcion: string;
-    };
-
-    type Jugador = {
-        nombre: string;
-        palas: Pala[];
-    };
+<script is:inline>
+    // Variables globales
+    let jugadoresData = [];
 
     // Verificar si el usuario es admin
     function verificarAdmin() {
         const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
         const adminPanel = document.querySelector('.admin-palas');
         
-        if (usuario.admin === true) {
+        console.log('🔍 Verificando admin...');
+        console.log('Usuario:', usuario);
+        console.log('Rol:', usuario.rol);
+        console.log('Panel encontrado:', adminPanel);
+        
+        // Verificar si el usuario tiene rol de admin
+        if (usuario.rol === 'admin') {
+            console.log('✅ Usuario es admin, mostrando panel');
             adminPanel?.classList.add('visible');
+        } else if (usuario.admin === true) {
+            console.log('✅ Usuario tiene admin=true, mostrando panel');
+            // Compatibilidad con datos antiguos de localStorage
+            adminPanel?.classList.add('visible');
+        } else {
+            console.log('❌ Usuario no es admin');
         }
     }
 
     // Cargar jugadores desde localStorage o usar datos por defecto
     const jugadoresGuardados = localStorage.getItem('jugadores');
-    let jugadoresData: Jugador[] = jugadoresGuardados ? JSON.parse(jugadoresGuardados) : [
+    if (jugadoresGuardados && jugadoresData.length === 0) {
+        jugadoresData = JSON.parse(jugadoresGuardados);
+    } else if (jugadoresData.length === 0) {
+        jugadoresData = [
         {
             nombre: "Alejandro Galán",
             palas: [
@@ -563,12 +574,50 @@
                 },
             ],
         }
-    ];
+        ];
+    }
 
-    // Guardar jugadores en localStorage
-    function guardarJugadores() {
-        localStorage.setItem('jugadores', JSON.stringify(jugadoresData));
-        renderizarPalas();
+    // API Helper functions
+    const API_URL = '/api';
+    
+    function getAuthToken() {
+        return localStorage.getItem('token');
+    }
+
+    async function cargarPalasDesdeAPI() {
+        try {
+            const response = await fetch(`${API_URL}/palas`);
+            const data = await response.json();
+            
+            if (data.success) {
+                // Agrupar palas por jugador
+                const jugadoresPorNombre: { [key: string]: any[] } = {};
+                
+                data.palas.forEach((pala: any) => {
+                    if (!jugadoresPorNombre[pala.jugador]) {
+                        jugadoresPorNombre[pala.jugador] = [];
+                    }
+                    jugadoresPorNombre[pala.jugador].push({
+                        id: pala._id,
+                        imagen: pala.imagen,
+                        nombrePala: pala.nombre,
+                        precio: `${pala.precio}€`,
+                        descripcion: pala.descripcion
+                    });
+                });
+                
+                // Convertir a formato jugadoresData
+                jugadoresData = Object.keys(jugadoresPorNombre).map(nombre => ({
+                    nombre,
+                    palas: jugadoresPorNombre[nombre]
+                }));
+                
+                renderizarPalas();
+            }
+        } catch (error) {
+            console.error('Error al cargar palas:', error);
+            mostrarNotificacion('Error al cargar palas desde el servidor', 'error');
+        }
     }
 
     // Renderizar palas en el DOM
@@ -719,33 +768,64 @@
     formAgregar?.addEventListener('submit', async (e) => {
         e.preventDefault();
         
+        const token = getAuthToken();
+        if (!token) {
+            alert('❌ Debes iniciar sesión como administrador');
+            return;
+        }
+        
         const jugadorIndex = parseInt((document.getElementById('jugadorAgregar') as HTMLSelectElement).value);
         const nombrePala = (document.getElementById('nombrePalaAgregar') as HTMLInputElement).value;
-        const precio = (document.getElementById('precioAgregar') as HTMLInputElement).value;
+        const precioInput = (document.getElementById('precioAgregar') as HTMLInputElement).value;
         const descripcion = (document.getElementById('descripcionAgregar') as HTMLTextAreaElement).value;
         const imagenInput = document.getElementById('imagenAgregar') as HTMLInputElement;
         
-        let imagenSrc = '/public/palas/default.png';
+        // Extraer precio numérico
+        const precio = parseFloat(precioInput.replace(/[^0-9.]/g, ''));
+        
+        let imagenSrc = '/palas/default.png';
         
         if (imagenInput.files && imagenInput.files[0]) {
             const reader = new FileReader();
-            imagenSrc = await new Promise((resolve) => {
-                reader.onload = () => resolve(reader.result as string);
-                reader.readAsDataURL(imagenInput.files![0]);
+            imagenSrc = await new Promise(function(resolve) {
+                reader.onload = function() { resolve(reader.result); };
+                reader.readAsDataURL(imagenInput.files[0]);
             });
         }
 
-        jugadoresData[jugadorIndex].palas.push({
-            imagen: imagenSrc,
-            nombrePala,
-            precio,
-            descripcion
-        });
-
-        guardarJugadores();
-        (formAgregar as HTMLFormElement).reset();
-        document.getElementById('previewAgregar')?.classList.remove('visible');
-        alert('✅ Pala agregada correctamente');
+        // Crear pala en la API
+        try {
+            const response = await fetch(`${API_URL}/palas`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    nombre: nombrePala,
+                    jugador: jugadoresData[jugadorIndex].nombre,
+                    precio: precio,
+                    descripcion: descripcion,
+                    imagen: imagenSrc,
+                    marca: 'Marca', // Puedes agregar un campo adicional si quieres
+                    stock: 10
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                await cargarPalasDesdeAPI();
+                (formAgregar as HTMLFormElement).reset();
+                document.getElementById('previewAgregar')?.classList.remove('visible');
+                mostrarNotificacion('✅ Pala agregada correctamente', 'success');
+            } else {
+                mostrarNotificacion(`❌ Error: ${data.message}`, 'error');
+            }
+        } catch (error) {
+            console.error('Error al agregar pala:', error);
+            mostrarNotificacion('❌ Error al agregar pala', 'error');
+        }
     });
 
     // Formulario Editar
@@ -772,31 +852,85 @@
     formEditar?.addEventListener('submit', async (e) => {
         e.preventDefault();
         
+        const token = getAuthToken();
+        if (!token) {
+            alert('❌ Debes iniciar sesión como administrador');
+            return;
+        }
+        
         const jugadorIndex = parseInt((document.getElementById('jugadorEditar') as HTMLSelectElement).value);
         const palaIndex = parseInt((document.getElementById('palaEditar') as HTMLSelectElement).value);
         const nuevoNombre = (document.getElementById('nombrePalaEditar') as HTMLInputElement).value;
-        const nuevoPrecio = (document.getElementById('precioEditar') as HTMLInputElement).value;
+        const nuevoPrecioInput = (document.getElementById('precioEditar') as HTMLInputElement).value;
         const nuevaDescripcion = (document.getElementById('descripcionEditar') as HTMLTextAreaElement).value;
         const imagenInput = document.getElementById('imagenEditar') as HTMLInputElement;
         
         const pala = jugadoresData[jugadorIndex].palas[palaIndex];
+        const nuevoPrecio = parseFloat(nuevoPrecioInput.replace(/[^0-9.]/g, ''));
         
-        if (nuevoNombre) pala.nombrePala = nuevoNombre;
-        pala.precio = nuevoPrecio;
-        pala.descripcion = nuevaDescripcion;
+        let imagenSrc = pala.imagen;
         
         if (imagenInput.files && imagenInput.files[0]) {
             const reader = new FileReader();
-            pala.imagen = await new Promise((resolve) => {
-                reader.onload = () => resolve(reader.result as string);
-                reader.readAsDataURL(imagenInput.files![0]);
+            imagenSrc = await new Promise(function(resolve) {
+                reader.onload = function() { resolve(reader.result); };
+                reader.readAsDataURL(imagenInput.files[0]);
             });
         }
 
-        guardarJugadores();
-        (formEditar as HTMLFormElement).reset();
-        document.getElementById('previewEditar')?.classList.remove('visible');
-        alert('✅ Pala actualizada correctamente');
+        // Actualizar en la API
+        try {
+            const response = await fetch(`${API_URL}/palas/${pala.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    nombre: nuevoNombre,async (e) => {
+        e.preventDefault();
+        
+        const token = getAuthToken();
+        if (!token) {
+            alert('❌ Debes iniciar sesión como administrador');
+            return;
+        }
+        
+        const jugadorIndex = parseInt((document.getElementById('jugadorEliminar') as HTMLSelectElement).value);
+        const palaIndex = parseInt((document.getElementById('palaEliminar') as HTMLSelectElement).value);
+        
+        const pala = jugadoresData[jugadorIndex].palas[palaIndex];
+        
+        if (confirm(`❓ ¿Estás seguro de eliminar "${pala.nombrePala}"?`)) {
+            try {
+                const response = await fetch(`${API_URL}/palas/${pala.id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    await cargarPalasDesdeAPI();
+                    (formEliminar as HTMLFormElement).reset();
+                    poblarSelectPalas(jugadorIndex, 'palaEliminar');
+                    mostrarNotificacion('✅ Pala eliminada correctamente', 'success');
+                } else {
+                    mostrarNotificacion(`❌ Error: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error al eliminar pala:', error);
+                mostrarNotificacion('❌ Error al eliminar pala', 'error');
+            }ada correctamente', 'success');
+            } else {
+                mostrarNotificacion(`❌ Error: ${data.message}`, 'error');
+            }
+        } catch (error) {
+            console.error('Error al actualizar pala:', error);
+            mostrarNotificacion('❌ Error al actualizar pala', 'error');
+        }
     });
 
     // Formulario Eliminar
@@ -817,9 +951,9 @@
         
         if (confirm(`❓ ¿Estás seguro de eliminar "${pala.nombrePala}"?`)) {
             jugadoresData[jugadorIndex].palas.splice(palaIndex, 1);
-            guardarJugadores();
-            (formEliminar as HTMLFormElement).reset();
-            poblarSelectPalas(jugadorIndex, 'palaEliminar');
+            guardarJugadores();async () => {
+        verificarAdmin();
+        await cargarPalasDesdeAPI(); // Cargar desde APIas(jugadorIndex, 'palaEliminar');
             alert('✅ Pala eliminada correctamente');
         }
     });
