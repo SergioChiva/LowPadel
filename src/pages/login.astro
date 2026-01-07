@@ -46,7 +46,8 @@ import Layout from '../layouts/Layout.astro';
 
         <div class="form-group">
           <label for="regPassword">Contraseña</label>
-          <input type="password" id="regPassword" required placeholder="Mínimo 6 caracteres" minlength="6">
+          <input type="password" id="regPassword" required placeholder="Mín. 6 caracteres, 1 número y 1 carácter especial" minlength="6">
+          <small class="password-hint">Debe contener al menos 6 caracteres, 1 número y 1 carácter especial (!@#$%^&*)</small>
         </div>
 
         <div class="form-group">
@@ -99,35 +100,37 @@ import Layout from '../layouts/Layout.astro';
       const email = document.getElementById('loginEmail').value;
       const password = document.getElementById('loginPassword').value;
 
-      // Por ahora usamos localStorage, luego será con API
-      const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
-      const usuario = usuarios.find(u => u.email === email && u.password === password);
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email, password })
+        });
 
-      // Verificar si es admin
-      if (email === 'admin@lowpadel.com' && password === 'Admin01@') {
-        const adminUser = {
-          nombre: 'Administrador',
-          nick: 'admin',
-          email: email,
-          password: password,
-          admin: true,
-          imagen: 'https://images.icon-icons.com/1378/PNG/512/avatardefault_92824.png',
-          pedidos: []
-        };
-        localStorage.setItem('usuario', JSON.stringify(adminUser));
-        alert('✅ Bienvenido, Administrador');
-        window.location.href = '/perfil';
-        return;
+        const data = await response.json();
+
+        if (data.success) {
+          // Guardar token y datos del usuario
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('usuario', JSON.stringify(data.user));
+          
+          alert(`✅ Bienvenido, ${data.user.nombre}`);
+          
+          // Redirigir según el rol
+          if (data.user.rol === 'admin') {
+            window.location.href = '/palas'; // O a un dashboard de admin
+          } else {
+            window.location.href = '/perfil';
+          }
+        } else {
+          alert(`❌ ${data.message}`);
+        }
+      } catch (error) {
+        console.error('Error en login:', error);
+        alert('❌ Error al iniciar sesión. Intenta de nuevo.');
       }
-
-      if (!usuario) {
-        alert('❌ Email o contraseña incorrectos');
-        return;
-      }
-
-      localStorage.setItem('usuario', JSON.stringify(usuario));
-      alert(`✅ Bienvenido, ${usuario.nombre}`);
-      window.location.href = '/perfil';
     });
 
     // Registro
@@ -145,32 +148,47 @@ import Layout from '../layouts/Layout.astro';
         return;
       }
 
-      // Verificar si el email ya existe
-      const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
-      if (usuarios.find(u => u.email === email)) {
-        alert('❌ Este email ya está registrado');
+      // Validar formato de contraseña
+      if (password.length < 6) {
+        alert('❌ La contraseña debe tener al menos 6 caracteres');
         return;
       }
 
-      // Crear nuevo usuario
-      const nuevoUsuario = {
-        id: Date.now(),
-        nombre,
-        nick: nombre.split(' ')[0].toLowerCase(), // Usar primer nombre como nick por defecto
-        email,
-        password,
-        imagen: 'https://images.icon-icons.com/1378/PNG/512/avatardefault_92824.png',
-        admin: false,
-        pedidos: [],
-        createdAt: new Date().toISOString()
-      };
+      if (!/\d/.test(password)) {
+        alert('❌ La contraseña debe contener al menos 1 número');
+        return;
+      }
 
-      usuarios.push(nuevoUsuario);
-      localStorage.setItem('usuarios', JSON.stringify(usuarios));
-      localStorage.setItem('usuario', JSON.stringify(nuevoUsuario));
+      if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+        alert('❌ La contraseña debe contener al menos 1 carácter especial (!@#$%^&*)');
+        return;
+      }
 
-      alert('✅ Cuenta creada exitosamente');
-      window.location.href = '/perfil';
+      try {
+        const response = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ nombre, email, password })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          // Guardar token y datos del usuario
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('usuario', JSON.stringify(data.user));
+          
+          alert('✅ Cuenta creada exitosamente');
+          window.location.href = '/perfil';
+        } else {
+          alert(`❌ ${data.message}`);
+        }
+      } catch (error) {
+        console.error('Error en registro:', error);
+        alert('❌ Error al crear la cuenta. Intenta de nuevo.');
+      }
     });
   });
 </script>
@@ -280,6 +298,15 @@ import Layout from '../layouts/Layout.astro';
 
   .form-group input::placeholder {
     color: rgba(241, 245, 249, 0.4);
+  }
+
+  .password-hint {
+    display: block;
+    color: rgba(241, 245, 249, 0.6);
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    padding-left: 0.5rem;
+    border-left: 2px solid var(--primary);
   }
 
   .btn-submit {

@@ -1,0 +1,257 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+<link rel="stylesheet" href="/styles/admin.css">
+
+<div class="admin-container">
+    <h1>🎾 Panel de Administración</h1>
+    
+    <!-- SECCIÓN NOTICIAS -->
+    <div class="admin-section">
+        <h2>📰 Gestión de Noticias</h2>
+        <div id="noticiasAdmin" class="noticias-admin">
+            <p>Cargando noticias...</p>
+        </div>
+    </div>
+    
+    <div class="admin-section">
+        <h2>Agregar Pala</h2>
+        <form id="formAgregar">
+            <select id="jugador" required>
+                <option value="Arturo Coello">Arturo Coello</option>
+                <option value="Agustín Tapia">Agustín Tapia</option>
+                <option value="Alejandro Galán">Alejandro Galán</option>
+                <option value="Federico Chingotto">Federico Chingotto</option>
+            </select>
+            
+            <input type="text" id="nombre" placeholder="Nombre pala" required>
+            <input type="number" id="precio" placeholder="Precio" step="0.01" required>
+            <textarea id="descripcion" placeholder="Descripción" required></textarea>
+            <input type="text" id="imagen" placeholder="URL de imagen" required>
+            
+            <button type="submit">Agregar Pala</button>
+        </form>
+    </div>
+
+    <div class="admin-section">
+        <h2>Palas en la Base de Datos</h2>
+        <div id="listaPalas"></div>
+    </div>
+</div>
+
+<script is:inline>
+    const API_URL = '/api';
+    
+    function getToken() {
+        return localStorage.getItem('token');
+    }
+    
+    // ==================== FUNCIONES DE NOTICIAS ====================
+    
+    async function cargarNoticias() {
+        try {
+            const res = await fetch(`${API_URL}/noticias?limit=3`);
+            const data = await res.json();
+            
+            const container = document.getElementById('noticiasAdmin');
+            if (data.success && data.noticias.length > 0) {
+                container.innerHTML = data.noticias.map(noticia => `
+                    <div class="noticia-edit" id="noticia-${noticia._id}">
+                        <div class="noticia-preview">
+                            <img src="${noticia.imagen}" alt="${noticia.titulo}">
+                            <div class="noticia-preview-info">
+                                <h3>${noticia.titulo}</h3>
+                                <p>${noticia.resumen || noticia.contenido.substring(0, 100) + '...'}</p>
+                            </div>
+                        </div>
+                        <div class="noticia-form">
+                            <div class="form-group">
+                                <label>Título:</label>
+                                <input type="text" class="noticia-titulo" value="${noticia.titulo}" />
+                            </div>
+                            <div class="form-group">
+                                <label>Resumen:</label>
+                                <textarea class="noticia-resumen" rows="2">${noticia.resumen || ''}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Contenido:</label>
+                                <textarea class="noticia-contenido" rows="4">${noticia.contenido}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Imagen URL:</label>
+                                <input type="text" class="noticia-imagen" value="${noticia.imagen}" />
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn-success" onclick="actualizarNoticia('${noticia._id}')">
+                                    💾 Guardar Cambios
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = '<p>No hay noticias. Ejecuta el script de inicialización.</p>';
+            }
+        } catch (error) {
+            console.error('Error cargando noticias:', error);
+        }
+    }
+    
+    window.actualizarNoticia = async function(id) {
+        const token = getToken();
+        if (!token) {
+            alert('Debes iniciar sesión');
+            return;
+        }
+        
+        const noticiaDiv = document.getElementById(`noticia-${id}`);
+        const datos = {
+            titulo: noticiaDiv.querySelector('.noticia-titulo').value,
+            resumen: noticiaDiv.querySelector('.noticia-resumen').value,
+            contenido: noticiaDiv.querySelector('.noticia-contenido').value,
+            imagen: noticiaDiv.querySelector('.noticia-imagen').value
+        };
+        
+        try {
+            const res = await fetch(`${API_URL}/noticias/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(datos)
+            });
+            
+            const data = await res.json();
+            if (data.success) {
+                alert('✅ Noticia actualizada correctamente!');
+                cargarNoticias();
+            } else {
+                alert('❌ ' + data.message);
+            }
+        } catch (error) {
+            alert('Error al actualizar noticia');
+            console.error(error);
+        }
+    };
+    
+    // ==================== FUNCIONES DE PALAS ====================
+    
+    async function cargarPalas() {
+        try {
+            const res = await fetch(`${API_URL}/palas`);
+            const data = await res.json();
+            
+            const lista = document.getElementById('listaPalas');
+            if (data.success && data.palas.length > 0) {
+                lista.innerHTML = data.palas.map(pala => `
+                    <div class="pala-item">
+                        <div class="pala-info">
+                            <h3>${pala.nombre}</h3>
+                            <p>Jugador: ${pala.jugador} | Precio: ${pala.precio}€</p>
+                            <p>${pala.descripcion}</p>
+                        </div>
+                        <button class="btn-eliminar" onclick="eliminarPala('${pala._id}')">Eliminar</button>
+                    </div>
+                `).join('');
+            } else {
+                lista.innerHTML = '<p>No hay palas en la base de datos</p>';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+    
+    window.eliminarPala = async function(id) {
+        if (!confirm('¿Eliminar esta pala?')) return;
+        
+        const token = getToken();
+        if (!token) {
+            alert('Debes iniciar sesión');
+            return;
+        }
+        
+        try {
+            const res = await fetch(`${API_URL}/palas/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            
+            const data = await res.json();
+            alert(data.message);
+            if (data.success) cargarPalas();
+        } catch (error) {
+            alert('Error al eliminar');
+        }
+    };
+    
+    document.getElementById('formAgregar').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const token = getToken();
+        if (!token) {
+            alert('Debes iniciar sesión como admin');
+            window.location.href = '/login';
+            return;
+        }
+        
+        const datos = {
+            nombre: document.getElementById('nombre').value,
+            jugador: document.getElementById('jugador').value,
+            precio: parseFloat(document.getElementById('precio').value),
+            descripcion: document.getElementById('descripcion').value,
+            imagen: document.getElementById('imagen').value,
+            marca: 'Marca',
+            stock: 10
+        };
+        
+        try {
+            const res = await fetch(`${API_URL}/palas`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(datos)
+            });
+            
+            const data = await res.json();
+            
+            if (data.success) {
+                alert('✅ Pala agregada!');
+                e.target.reset();
+                cargarPalas();
+            } else {
+                alert('❌ ' + data.message);
+            }
+        } catch (error) {
+            alert('Error al agregar pala');
+            console.error(error);
+        }
+    });
+    
+    // Verificar que sea admin
+    const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+    const token = localStorage.getItem('token');
+    
+    // Verificar si el usuario tiene rol de admin
+    if (!usuario || (usuario.rol !== 'admin' && usuario.admin !== true)) {
+        alert('⛔ Acceso denegado. Solo administradores pueden acceder a esta página.\n\nSi cambiaste tu rol en MongoDB, cierra sesión y vuelve a iniciar sesión.');
+        window.location.href = '/login';
+    }
+    
+    // Verificar token
+    if (!token) {
+        alert('⛔ Necesitas iniciar sesión como administrador.');
+        window.location.href = '/login';
+    }
+    
+    // Cargar palas al inicio
+    cargarPalas();
+    
+    // Cargar noticias al inicio
+    cargarNoticias();
+</script>
+</Layout>

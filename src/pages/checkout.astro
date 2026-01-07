@@ -353,27 +353,33 @@ import Layout from '../layouts/Layout.astro';
     document.getElementById('total').textContent = total.toFixed(2) + '€';
   }
 
-  function procesarPago(carrito, usuario) {
+  async function procesarPago(carrito, usuario) {
     // Simular procesamiento
     const btnSubmit = document.querySelector('.btn-pay');
     btnSubmit.disabled = true;
     btnSubmit.innerHTML = '<span>Procesando...</span>';
 
-    setTimeout(() => {
-      // Crear pedido
-      const pedido = {
-        id: Date.now(),
-        usuario: usuario.email,
-        productos: carrito.map(item => ({
-          nombre: item.nombre,
-          jugador: item.jugador,
-          precio: parseFloat(item.precio),
-          cantidad: item.cantidad || 1
-        })),
-        total: carrito.reduce((sum, item) => sum + (parseFloat(item.precio) * (item.cantidad || 1)), 0) + 5,
-        estado: 'pendiente',
-        fecha: new Date().toISOString(),
-        direccion: {
+    try {
+      // Preparar datos del pedido
+      const productos = carrito.map(item => ({
+        pala: item._id || null,
+        nombre: item.nombre,
+        jugador: item.jugador,
+        precio: parseFloat(item.precio),
+        cantidad: item.cantidad || 1
+      }));
+
+      const subtotal = carrito.reduce((sum, item) => sum + (parseFloat(item.precio) * (item.cantidad || 1)), 0);
+
+      const pedidoData = {
+        productos: productos,
+        subtotal: subtotal,
+        envio: 5,
+        total: subtotal + 5,
+        direccionEnvio: {
+          nombre: document.getElementById('nombre').value,
+          email: document.getElementById('email').value,
+          telefono: document.getElementById('telefono').value,
           calle: document.getElementById('direccion').value,
           ciudad: document.getElementById('ciudad').value,
           codigoPostal: document.getElementById('codigoPostal').value,
@@ -381,28 +387,61 @@ import Layout from '../layouts/Layout.astro';
         },
         datosPago: {
           numeroTarjeta: '**** **** **** ' + document.getElementById('numeroTarjeta').value.slice(-4),
-          nombreTitular: document.getElementById('nombreTitular').value,
-          fechaExpiracion: document.getElementById('fechaExpiracion').value
+          nombreTitular: document.getElementById('nombreTitular').value
         }
       };
 
-      // Guardar pedido
-      const pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]');
-      pedidos.push(pedido);
-      localStorage.setItem('pedidos', JSON.stringify(pedidos));
+      // Obtener token
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('⚠️ Debes iniciar sesión para completar la compra');
+        window.location.href = '/login';
+        return;
+      }
 
-      // Añadir pedido al usuario
-      usuario.pedidos = usuario.pedidos || [];
-      usuario.pedidos.push(pedido);
-      localStorage.setItem('usuario', JSON.stringify(usuario));
+      // Guardar pedido en la base de datos
+      const response = await fetch('/api/pedidos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(pedidoData)
+      });
+
+      const data = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.message || 'Error al procesar el pedido');
+      }
 
       // Limpiar carrito
       localStorage.removeItem('carrito');
 
-      // Mostrar modal de confirmación
-      document.getElementById('numeroPedido').textContent = '#' + pedido.id;
-      document.getElementById('modalConfirmacion').classList.remove('hidden');
-    }, 2000);
+      // Actualizar contador del carrito
+      const carritoCount = document.getElementById('carrito-count');
+      if (carritoCount) {
+        carritoCount.textContent = '0';
+        carritoCount.style.display = 'none';
+      }
+
+      // Mostrar modal de éxito
+      const modal = document.getElementById('modalConfirmacion');
+      const numeroPedido = document.getElementById('numeroPedido');
+      if (numeroPedido) {
+        numeroPedido.textContent = `#${data.pedido._id.slice(-8).toUpperCase()}`;
+      }
+      
+      if (modal) {
+        modal.classList.remove('hidden');
+      }
+
+    } catch (error) {
+      console.error('Error al procesar el pago:', error);
+      alert('❌ Error al procesar el pedido: ' + error.message);
+      btnSubmit.disabled = false;
+      btnSubmit.innerHTML = '<span>Pagar</span>';
+    }
   }
 </script>
 

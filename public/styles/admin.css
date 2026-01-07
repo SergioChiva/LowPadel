@@ -1,0 +1,295 @@
+/* Estilos para el Panel de Administración */
+
+.admin-container {
+    max-width: 1400px;
+    margin: 50px auto;
+    padding: 20px;
+    color: white;
+}
+
+.admin-container h1 {
+    text-align: center;
+    font-size: 3rem;
+    margin-bottom: 50px;
+    background: linear-gradient(135deg, #00c896, #6ee7b7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.admin-section {
+    background: linear-gradient(135deg, rgba(15, 30, 50, 0.95), rgba(10, 20, 40, 0.95));
+    padding: 40px;
+    border-radius: 20px;
+    margin-bottom: 40px;
+    border: 3px solid #00c896;
+    box-shadow: 0 10px 40px rgba(0, 200, 150, 0.3);
+}
+
+.admin-section h2 {
+    color: #00c896;
+    margin: 0 0 30px 0;
+    font-size: 2rem;
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgba(0, 200, 150, 0.3);
+}
+
+/* Estilos para Noticias */
+.noticias-admin {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.noticia-edit {
+    background: rgba(0, 200, 150, 0.08);
+    padding: 30px;
+    border-radius: 15px;
+    border: 2px solid rgba(0, 200, 150, 0.4);
+    transition: all 0.3s ease;
+}
+
+.noticia-edit:hover {
+    border-color: #00c896;
+    box-shadow: 0 5px 20px rgba(0, 200, 150, 0.2);
+}
+
+.noticia-preview {
+    display: flex;
+    gap: 25px;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid rgba(0, 200, 150, 0.3);
+}
+
+.noticia-preview img {
+    width: 200px;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid rgba(0, 200, 150, 0.3);
+    flex-shrink: 0;
+}
+
+.noticia-preview-info {
+    flex: 1;
+}
+
+.noticia-preview-info h3 {
+    margin: 0 0 12px 0;
+    color: #00c896;
+    font-size: 1.4rem;
+}
+
+.noticia-preview-info p {
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.noticia-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 8px;
+    color: #00c896;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.form-group input,
+.form-group textarea {
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 2px solid rgba(0, 200, 150, 0.3);
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #00c896;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.form-group textarea {
+    resize: vertical;
+    font-family: inherit;
+}
+
+.noticia-titulo {
+    font-size: 16px;
+}
+
+.noticia-resumen {
+    min-height: 60px;
+}
+
+.noticia-contenido {
+    min-height: 120px;
+}
+
+.noticia-imagen {
+    font-size: 14px;
+}
+
+.btn-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #00c896, #6ee7b7);
+    color: #1a2332;
+    padding: 14px 30px;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 200, 150, 0.4);
+}
+
+/* Estilos para formularios de palas */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+input, select, textarea {
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 2px solid rgba(0, 200, 150, 0.3);
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #00c896;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+button[type="submit"] {
+    background: linear-gradient(135deg, #00c896, #6ee7b7);
+    color: #1a2332;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 200, 150, 0.5);
+}
+
+.pala-item {
+    background: rgba(0, 200, 150, 0.08);
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 2px solid rgba(0, 200, 150, 0.3);
+    transition: all 0.3s ease;
+}
+
+.pala-item:hover {
+    border-color: #00c896;
+}
+
+.pala-info h3 {
+    margin: 0 0 10px 0;
+    color: #00c896;
+}
+
+.pala-info p {
+    color: rgba(255, 255, 255, 0.7);
+    margin: 5px 0;
+}
+
+.btn-eliminar {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-eliminar:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .admin-container {
+        padding: 15px;
+    }
+    
+    .admin-container h1 {
+        font-size: 2rem;
+    }
+    
+    .admin-section {
+        padding: 25px;
+    }
+    
+    .admin-section h2 {
+        font-size: 1.5rem;
+    }
+    
+    .noticia-preview {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .noticia-preview img {
+        width: 100%;
+        height: 180px;
+    }
+    
+    .btn-group {
+        flex-direction: column;
+    }
+    
+    .pala-item {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+}

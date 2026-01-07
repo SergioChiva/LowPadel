@@ -19,6 +19,7 @@ async function cargarPalasDesdeAPI() {
                 jugadoresPorNombre[pala.jugador] = [];
             }
             jugadoresPorNombre[pala.jugador].push({
+                _id: pala._id, // Guardar el ID de MongoDB
                 imagen: pala.imagen,
                 nombrePala: pala.nombre,
                 precio: `${pala.precio}€`,
@@ -74,6 +75,7 @@ async function cargarPalasDesdeAPI() {
                 const btnComprar = card.querySelector('.btn-comprar');
                 btnComprar.addEventListener('click', () => {
                     agregarAlCarrito({
+                        _id: info._id, // ID de MongoDB
                         nombre: info.nombrePala,
                         precio: info.precio.replace('€', ''),
                         imagen: info.imagen,

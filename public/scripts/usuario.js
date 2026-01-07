@@ -54,15 +54,14 @@ if (form) {
         }
 
         // Validar contraseña
-        if (
-            password.length < 8 ||
-            !/[A-Z]/.test(password) ||
-            !/[a-z]/.test(password) ||
-            !/[0-9]/.test(password) ||
-            !/[!@#$%^&*._-]/.test(password)
-        ) {
-            errorPassword.textContent =
-                "Contraseña debe tener al menos una letra mayúscula, una minúscula, un número y un carácter especial";
+        if (password.length < 6) {
+            errorPassword.textContent = "La contraseña debe tener al menos 6 caracteres";
+            validaRegistro = false;
+        } else if (!/[0-9]/.test(password)) {
+            errorPassword.textContent = "La contraseña debe contener al menos 1 número";
+            validaRegistro = false;
+        } else if (!/[!@#$%^&*(),.?":{}|<>._-]/.test(password)) {
+            errorPassword.textContent = "La contraseña debe contener al menos 1 carácter especial (!@#$%^&*)";
             validaRegistro = false;
         } else {
             errorPassword.textContent = "";
@@ -135,6 +134,19 @@ window.addEventListener("DOMContentLoaded", () => {
         if (linkCuenta) {
             linkCuenta.textContent = usuario.nick || "Mi cuenta";
             linkCuenta.href = "/perfil"; // Redirigir al perfil mejorado
+        }
+
+        // 🔹 Mostrar botón de admin si es admin
+        const adminNavItem = document.getElementById('adminNavItem');
+        if (adminNavItem) {
+            // Verificar si es admin por cualquiera de las propiedades
+            const esAdmin = usuario.rol === 'admin' || usuario.admin === true;
+            if (esAdmin) {
+                adminNavItem.style.display = 'block';
+                console.log('✅ Usuario administrador detectado');
+            } else {
+                adminNavItem.style.display = 'none';
+            }
         }
 
         // 🔹 Si estás en la página de registro, mostrar directamente el perfil

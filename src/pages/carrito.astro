@@ -3,109 +3,49 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout>
-  <div class="carrito-page">
-    <div class="carrito-header">
-      <h1>
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="9" cy="21" r="1"></circle>
-          <circle cx="20" cy="21" r="1"></circle>
-          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-        </svg>
-        Mi Carrito
-      </h1>
-      <button id="btnVaciarCarrito" class="btn-vaciar">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="3 6 5 6 21 6"></polyline>
-          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-        </svg>
-        Vaciar Carrito
-      </button>
-    </div>
+  <div class="carrito-container">
+    <h1>🛒 Mi Carrito</h1>
 
-    <div id="carritoVacio" class="carrito-vacio hidden">
-      <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <circle cx="9" cy="21" r="1"></circle>
-        <circle cx="20" cy="21" r="1"></circle>
-        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-      </svg>
+    <div id="carritoVacio" class="carrito-vacio" style="display: none;">
+      <div class="empty-icon">🛒</div>
       <h2>Tu carrito está vacío</h2>
-      <p>Añade productos para comenzar tu compra</p>
-      <a href="/palas" class="btn-primary">Ver Productos</a>
+      <p>¡Añade productos para comenzar tu compra!</p>
+      <a href="/palas" class="btn-seguir-comprando">
+        Ver Productos
+      </a>
     </div>
 
-    <div id="carritoContenido" class="carrito-contenido">
-      <div class="productos-lista" id="productosLista">
-        <!-- Productos se insertan aquí con JS -->
+    <div id="carritoContenido" class="carrito-content">
+      <div class="productos-grid" id="productosCarrito">
+        <!-- Los productos se cargarán aquí dinámicamente -->
       </div>
 
-      <div class="resumen-carrito">
+      <div class="carrito-resumen">
         <div class="resumen-card">
           <h2>Resumen del Pedido</h2>
           
           <div class="resumen-linea">
-            <span>Subtotal (<span id="cantidadItems">0</span> productos)</span>
-            <span id="subtotalCarrito">0€</span>
+            <span>Subtotal</span>
+            <span id="subtotal">0.00€</span>
           </div>
-
+          
           <div class="resumen-linea">
             <span>Envío</span>
-            <span id="envioCarrito" class="envio-gratis">GRATIS</span>
+            <span id="envio">5.00€</span>
           </div>
-
-          <div class="resumen-separador"></div>
-
-          <div class="resumen-total">
+          
+          <div class="resumen-linea resumen-total">
             <span>Total</span>
-            <span id="totalCarrito">0€</span>
+            <span id="total">0.00€</span>
           </div>
 
-          <button id="btnProcederPago" class="btn-checkout">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-              <line x1="1" y1="10" x2="23" y2="10"></line>
-            </svg>
-            Proceder al Pago
+          <button id="btnCheckout" class="btn-checkout">
+            🔒 Proceder al Pago
           </button>
 
-          <div class="metodos-pago">
-            <p>Aceptamos:</p>
-            <div class="iconos-pago">
-              <span>💳 Visa</span>
-              <span>💳 Mastercard</span>
-              <span>💳 Amex</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="garantias">
-          <div class="garantia-item">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-            </svg>
-            <div>
-              <strong>Envío gratuito</strong>
-              <span>En pedidos superiores a 50€</span>
-            </div>
-          </div>
-          <div class="garantia-item">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-            </svg>
-            <div>
-              <strong>Compra segura</strong>
-              <span>Pago 100% protegido</span>
-            </div>
-          </div>
-          <div class="garantia-item">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="23 4 23 10 17 10"></polyline>
-              <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
-            </svg>
-            <div>
-              <strong>Devolución fácil</strong>
-              <span>30 días para devoluciones</span>
-            </div>
-          </div>
+          <a href="/palas" class="btn-seguir-comprando-link">
+            ← Seguir Comprando
+          </a>
         </div>
       </div>
     </div>
@@ -115,71 +55,61 @@ import Layout from '../layouts/Layout.astro';
 <script is:inline>
   document.addEventListener('DOMContentLoaded', () => {
     cargarCarrito();
-
-    // Botón vaciar carrito
-    document.getElementById('btnVaciarCarrito').addEventListener('click', () => {
-      if (confirm('¿Estás seguro de que quieres vaciar el carrito?')) {
-        localStorage.removeItem('carrito');
-        cargarCarrito();
-        mostrarNotificacion('🗑️ Carrito vaciado', 'info');
-        actualizarContadorCarrito();
-      }
-    });
-
-    // Botón proceder al pago
-    document.getElementById('btnProcederPago').addEventListener('click', () => {
-      window.location.href = '/checkout';
-    });
   });
 
   function cargarCarrito() {
     const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
     
     if (carrito.length === 0) {
-      document.getElementById('carritoVacio').classList.remove('hidden');
-      document.getElementById('carritoContenido').classList.add('hidden');
+      mostrarCarritoVacio();
       return;
     }
 
-    document.getElementById('carritoVacio').classList.add('hidden');
-    document.getElementById('carritoContenido').classList.remove('hidden');
-
-    mostrarProductos(carrito);
-    actualizarResumen(carrito);
+    mostrarCarritoConProductos(carrito);
+    calcularTotales(carrito);
   }
 
-  function mostrarProductos(carrito) {
-    const container = document.getElementById('productosLista');
+  function mostrarCarritoVacio() {
+    document.getElementById('carritoVacio').style.display = 'flex';
+    document.getElementById('carritoContenido').style.display = 'none';
+  }
+
+  function mostrarCarritoConProductos(carrito) {
+    document.getElementById('carritoVacio').style.display = 'none';
+    document.getElementById('carritoContenido').style.display = 'grid';
     
+    const container = document.getElementById('productosCarrito');
     container.innerHTML = carrito.map((item, index) => `
-      <div class="producto-carrito" data-index="${index}">
+      <div class="producto-card" data-index="${index}">
         <div class="producto-imagen">
-          <img src="${item.imagen}" alt="${item.nombre}">
+          <img src="${item.imagen}" alt="${item.nombre}" loading="lazy">
         </div>
-        <div class="producto-info">
-          <h3>${item.nombre}</h3>
-          <p class="producto-jugador">${item.jugador || 'LowPadel'}</p>
-          <p class="producto-precio">${item.precio}€</p>
+        
+        <div class="producto-detalles">
+          <h3 class="producto-nombre">${item.nombre}</h3>
+          <p class="producto-jugador">${item.jugador}</p>
         </div>
-        <div class="producto-cantidad">
+        
+        <div class="producto-precio">
+          ${parseFloat(item.precio).toFixed(2)}€
+        </div>
+        
+        <div class="cantidad-control">
           <button class="btn-cantidad" onclick="cambiarCantidad(${index}, -1)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="5" y1="12" x2="19" y2="12"></line>
             </svg>
           </button>
-          <span class="cantidad">${item.cantidad}</span>
+          <span class="cantidad-numero">${item.cantidad || 1}</span>
           <button class="btn-cantidad" onclick="cambiarCantidad(${index}, 1)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="12" y1="5" x2="12" y2="19"></line>
               <line x1="5" y1="12" x2="19" y2="12"></line>
             </svg>
           </button>
         </div>
-        <div class="producto-subtotal">
-          <p class="subtotal-label">Subtotal</p>
-          <p class="subtotal-precio">${(parseFloat(item.precio) * item.cantidad).toFixed(2)}€</p>
-        </div>
-        <button class="btn-eliminar" onclick="eliminarProducto(${index})" title="Eliminar">
+        
+        <button class="btn-eliminar" onclick="eliminarProducto(${index})" title="Eliminar producto">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="3 6 5 6 21 6"></polyline>
             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -189,73 +119,83 @@ import Layout from '../layouts/Layout.astro';
         </button>
       </div>
     `).join('');
-  }
 
-  function actualizarResumen(carrito) {
-    const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
-    const subtotal = carrito.reduce((sum, item) => sum + (parseFloat(item.precio) * item.cantidad), 0);
-    const envio = subtotal >= 50 ? 0 : 5;
-    const total = subtotal + envio;
-
-    document.getElementById('cantidadItems').textContent = totalItems;
-    document.getElementById('subtotalCarrito').textContent = subtotal.toFixed(2) + '€';
-    
-    const envioElement = document.getElementById('envioCarrito');
-    if (envio === 0) {
-      envioElement.textContent = 'GRATIS';
-      envioElement.className = 'envio-gratis';
-    } else {
-      envioElement.textContent = envio.toFixed(2) + '€';
-      envioElement.className = '';
-    }
-    
-    document.getElementById('totalCarrito').textContent = total.toFixed(2) + '€';
+    // Botón de checkout
+    document.getElementById('btnCheckout').addEventListener('click', () => {
+      window.location.href = '/checkout';
+    });
   }
 
   function cambiarCantidad(index, cambio) {
-    const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
+    let carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
     
     if (carrito[index]) {
-      carrito[index].cantidad += cambio;
+      carrito[index].cantidad = (carrito[index].cantidad || 1) + cambio;
       
+      // Si la cantidad llega a 0, eliminar el producto
       if (carrito[index].cantidad <= 0) {
-        eliminarProducto(index);
-        return;
+        carrito.splice(index, 1);
+        mostrarNotificacion('Producto eliminado del carrito', 'info');
+      } else {
+        mostrarNotificacion('Cantidad actualizada', 'success');
       }
       
       localStorage.setItem('carrito', JSON.stringify(carrito));
+      
+      // Actualizar contador global
+      if (typeof window.actualizarContadorCarrito === 'function') {
+        window.actualizarContadorCarrito();
+      }
+      
+      // Recargar vista del carrito
       cargarCarrito();
-      actualizarContadorCarrito();
     }
   }
 
   function eliminarProducto(index) {
-    const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
-    carrito.splice(index, 1);
-    localStorage.setItem('carrito', JSON.stringify(carrito));
-    cargarCarrito();
-    actualizarContadorCarrito();
-    mostrarNotificacion('🗑️ Producto eliminado del carrito', 'info');
+    if (confirm('¿Estás seguro de que quieres eliminar este producto?')) {
+      let carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
+      carrito.splice(index, 1);
+      localStorage.setItem('carrito', JSON.stringify(carrito));
+      
+      // Actualizar contador global
+      if (typeof window.actualizarContadorCarrito === 'function') {
+        window.actualizarContadorCarrito();
+      }
+      
+      mostrarNotificacion('Producto eliminado del carrito', 'info');
+      cargarCarrito();
+    }
   }
 
-  function actualizarContadorCarrito() {
-    const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
-    const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+  function calcularTotales(carrito) {
+    const subtotal = carrito.reduce((sum, item) => {
+      return sum + (parseFloat(item.precio) * (item.cantidad || 1));
+    }, 0);
     
-    const badge = document.getElementById('carrito-count');
-    if (badge) {
-      badge.textContent = totalItems;
-      badge.style.display = totalItems > 0 ? 'flex' : 'none';
-    }
+    const envio = subtotal > 0 ? 5 : 0;
+    const total = subtotal + envio;
+
+    document.getElementById('subtotal').textContent = subtotal.toFixed(2) + '€';
+    document.getElementById('envio').textContent = envio.toFixed(2) + '€';
+    document.getElementById('total').textContent = total.toFixed(2) + '€';
   }
 
   function mostrarNotificacion(mensaje, tipo = 'success') {
     const notif = document.createElement('div');
-    notif.className = `notificacion notif-${tipo}`;
-    notif.textContent = mensaje;
+    notif.className = `notificacion-carrito notif-${tipo}`;
+    notif.innerHTML = `
+      <div class="notif-content">
+        <span class="notif-mensaje">${mensaje}</span>
+        <button class="notif-close" onclick="this.parentElement.parentElement.remove()">×</button>
+      </div>
+    `;
+    
     document.body.appendChild(notif);
     
-    setTimeout(() => notif.classList.add('show'), 100);
+    setTimeout(() => {
+      notif.classList.add('show');
+    }, 100);
     
     setTimeout(() => {
       notif.classList.remove('show');
@@ -264,241 +204,265 @@ import Layout from '../layouts/Layout.astro';
   }
 </script>
 
-<style>
-  .carrito-page {
+<style is:global>
+  .carrito-container {
     max-width: 1400px;
-    margin: 0 auto;
+    margin: 2rem auto;
     padding: 2rem;
-    min-height: calc(100vh - 200px);
+    min-height: 70vh;
   }
 
-  .carrito-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid rgba(0, 200, 150, 0.2);
-  }
-
-  .carrito-header h1 {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+  h1 {
+    text-align: center;
     color: var(--primary);
     font-size: 2.5rem;
-    font-weight: 700;
-  }
-
-  .btn-vaciar {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.8rem 1.5rem;
-    background: rgba(244, 67, 54, 0.1);
-    border: 1px solid rgba(244, 67, 54, 0.3);
-    color: #f44336;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
-  }
-
-  .btn-vaciar:hover {
-    background: rgba(244, 67, 54, 0.2);
-    transform: translateY(-2px);
+    margin-bottom: 2rem;
+    text-shadow: 0 2px 10px rgba(0, 200, 150, 0.3);
   }
 
   /* Carrito Vacío */
   .carrito-vacio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 3rem;
     text-align: center;
-    padding: 4rem 2rem;
-    color: var(--text-light);
   }
 
-  .carrito-vacio svg {
-    opacity: 0.2;
-    margin-bottom: 2rem;
+  .empty-icon {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
   }
 
   .carrito-vacio h2 {
+    color: var(--text-light);
     font-size: 2rem;
-    color: var(--primary);
     margin-bottom: 1rem;
   }
 
   .carrito-vacio p {
-    opacity: 0.7;
+    color: rgba(241, 245, 249, 0.7);
+    font-size: 1.1rem;
     margin-bottom: 2rem;
   }
 
-  .hidden {
-    display: none !important;
-  }
-
-  /* Carrito con Contenido */
-  .carrito-contenido {
+  /* Contenido del Carrito */
+  .carrito-content {
     display: grid;
     grid-template-columns: 1fr 400px;
     gap: 2rem;
+    align-items: start;
   }
 
-  /* Lista de Productos */
-  .productos-lista {
+  @media (max-width: 968px) {
+    .carrito-content {
+      grid-template-columns: 1fr;
+    }
+
+    .carrito-resumen {
+      order: 2;
+    }
+  }
+
+  /* Grid de Productos */
+  .productos-grid {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
   }
 
-  .producto-carrito {
+  /* Tarjeta de Producto */
+  .producto-card {
+    background: linear-gradient(135deg, rgba(0, 200, 150, 0.15), rgba(147, 51, 234, 0.1));
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(0, 200, 150, 0.3);
+    border-radius: 15px;
+    padding: 1rem;
     display: grid;
-    grid-template-columns: 120px 1fr auto auto auto;
-    gap: 2rem;
+    grid-template-columns: 80px 1fr auto auto auto;
+    gap: 1rem;
     align-items: center;
-    background: linear-gradient(135deg, rgba(0, 200, 150, 0.08), rgba(147, 51, 234, 0.08));
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(0, 200, 150, 0.3);
-    border-radius: 20px;
-    padding: 1.5rem;
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   }
 
-  .producto-carrito:hover {
-    transform: translateY(-3px);
+  .producto-card:hover {
+    transform: translateX(5px);
+    box-shadow: 0 6px 25px rgba(0, 200, 150, 0.4);
     border-color: var(--primary);
-    box-shadow: 0 10px 30px rgba(0, 200, 150, 0.3);
-    background: linear-gradient(135deg, rgba(0, 200, 150, 0.12), rgba(147, 51, 234, 0.12));
   }
 
+  @media (max-width: 768px) {
+    .producto-card {
+      grid-template-columns: 60px 1fr;
+      gap: 0.8rem;
+    }
+    
+    .cantidad-control {
+      grid-column: 1 / -1;
+      justify-self: center;
+    }
+    
+    .btn-eliminar {
+      grid-column: 1 / -1;
+      justify-self: center;
+      width: 100%;
+    }
+  }
+
+  /* Imagen del Producto */
   .producto-imagen {
-    width: 120px;
-    height: 120px;
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    overflow: hidden;
-    border: 2px solid rgba(0, 200, 150, 0.2);
     flex-shrink: 0;
+  }
+
+  @media (max-width: 768px) {
+    .producto-imagen {
+      width: 60px;
+      height: 60px;
+    }
   }
 
   .producto-imagen img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    object-position: center;
+    object-fit: contain;
+    padding: 5px;
   }
 
-  .producto-info h3 {
-    color: var(--text-light);
+  /* Detalles del Producto */
+  .producto-detalles {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 0;
+  }
+
+  .producto-nombre {
+    color: var(--primary);
     font-size: 1.1rem;
-    margin-bottom: 0.3rem;
+    font-weight: 700;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .producto-jugador {
-    color: var(--primary-light);
+    color: var(--accent-light);
     font-size: 0.9rem;
-    opacity: 0.8;
-    margin-bottom: 0.5rem;
+    margin: 0;
   }
 
   .producto-precio {
-    color: var(--primary);
-    font-size: 1.3rem;
-    font-weight: 700;
-  }
-
-  /* Cantidad */
-  .producto-cantidad {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    background: rgba(0, 0, 0, 0.2);
-    padding: 0.5rem 1rem;
-    border-radius: 10px;
+    color: var(--text-light);5);
+    border: 2px solid var(--primary);
+    border-radius: 50px;
+    padding: 0.2rem;
   }
 
   .btn-cantidad {
-    width: 32px;
-    height: 32px;
-    background: rgba(0, 200, 150, 0.2);
-    border: 1px solid rgba(0, 200, 150, 0.3);
-    border-radius: 6px;
-    color: var(--primary);
-    cursor: pointer;
+    background: var(--primary);
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
     transition: all 0.3s ease;
+    color: var(--primary-dark);
   }
 
   .btn-cantidad:hover {
-    background: rgba(0, 200, 150, 0.3);
-    transform: scale(1.1);
+    background: var(--primary-light);
+    transform: scale(1.15);
   }
 
-  .cantidad {
+  .btn-cantidad:active {
+    transform: scale(0.9);
+  }
+
+  .cantidad-numero {
     color: var(--text-light);
-    font-weight: 700;
     font-size: 1.1rem;
-    min-width: 30px;
-    text-align: center;
-  }
-
-  /* Subtotal */
-  .producto-subtotal {
-    text-align: right;
-  }
-
-  .subtotal-label {
-    color: var(--primary-light);
-    font-size: 0.85rem;
-    opacity: 0.8;
-    margin-bottom: 0.3rem;
-  }
-
-  .subtotal-precio {
-    color: var(--text-light);
-    font-size: 1.3rem;
     font-weight: 700;
+    min-width: 35px;
+    text-align: center;
   }
 
   /* Botón Eliminar */
   .btn-eliminar {
-    width: 40px;
-    height: 40px;
-    background: rgba(244, 67, 54, 0.1);
-    border: 1px solid rgba(244, 67, 54, 0.3);
-    border-radius: 8px;
-    color: #f44336;
+    background: rgba(239, 68, 68, 0.2);
+    border: 2px solid #ef4444;
+    color: #ef4444;
+    padding: 0.5rem;
+    border-radius: 10px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
+    width: 45px;
+    height: 45px;
   }
 
   .btn-eliminar:hover {
-    background: rgba(244, 67, 54, 0.2);
+    background: #ef4444;
+    color: white;
     transform: scale(1.1);
   }
 
-  /* Resumen Carrito */
-  .resumen-carrito {
+  .btn-eliminar:active {
+    transform: scale(0.95).3s ease;
+  }
+
+  .btn-eliminar:hover {
+    background: #ef4444;
+    color: white;
+    transform: scale(1.05);
+  }
+
+  /* Subtotal del Producto */
+  .producto-subtotal {
+    color: rgba(241, 245, 249, 0.8);
+    font-size: 1rem;
+    margin-top: auto;
+  }
+
+  .producto-subtotal strong {
+    color: var(--primary);
+    font-size: 1.2rem;
+  }
+
+  /* Resumen del Pedido */
+  .carrito-resumen {
     position: sticky;
-    top: 100px;
-    height: fit-content;
+    top: 2rem;
   }
 
   .resumen-card {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(0, 200, 150, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 20px;
     padding: 2rem;
-    margin-bottom: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   }
 
   .resumen-card h2 {
@@ -511,199 +475,126 @@ import Layout from '../layouts/Layout.astro';
   .resumen-linea {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--text-light);
-    margin-bottom: 1rem;
-    font-size: 1rem;
-  }
-
-  .envio-gratis {
-    color: #4caf50 !important;
-    font-weight: 700;
-  }
-
-  .resumen-separador {
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--primary), transparent);
-    margin: 1.5rem 0;
+    font-size: 1.1rem;
   }
 
   .resumen-total {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    border-bottom: none;
+    padding-top: 1.5rem;
+    margin-top: 0.5rem;
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--primary);
-    margin-bottom: 2rem;
   }
 
+  /* Botones */
   .btn-checkout {
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.8rem;
-    padding: 1.2rem;
-    background: linear-gradient(135deg, var(--primary), var(--accent));
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: var(--primary-dark);
     border: none;
-    border-radius: 12px;
-    color: white;
-    font-size: 1.1rem;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-size: 1.2rem;
     font-weight: 700;
     cursor: pointer;
+    margin-top: 1.5rem;
     transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    box-shadow: 0 4px 20px rgba(0, 200, 150, 0.3);
   }
 
   .btn-checkout:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0, 200, 150, 0.5);
+    box-shadow: 0 8px 30px rgba(0, 200, 150, 0.5);
   }
 
-  .metodos-pago {
-    margin-top: 1.5rem;
-    text-align: center;
-    color: var(--text-light);
-    opacity: 0.8;
+  .btn-checkout:active {
+    transform: translateY(-1px);
   }
 
-  .metodos-pago p {
-    font-size: 0.9rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .iconos-pago {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    font-size: 0.85rem;
-  }
-
-  /* Garantías */
-  .garantias {
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 15px;
-    padding: 1.5rem;
-  }
-
-  .garantia-item {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
-    margin-bottom: 1.5rem;
-    color: var(--text-light);
-  }
-
-  .garantia-item:last-child {
-    margin-bottom: 0;
-  }
-
-  .garantia-item svg {
-    color: var(--primary);
-    flex-shrink: 0;
-  }
-
-  .garantia-item strong {
+  .btn-seguir-comprando,
+  .btn-seguir-comprando-link {
     display: block;
-    margin-bottom: 0.2rem;
-    font-size: 0.95rem;
-  }
-
-  .garantia-item span {
-    font-size: 0.85rem;
-    opacity: 0.7;
-  }
-
-  .btn-primary {
-    display: inline-block;
-    padding: 1rem 2rem;
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: white;
+    text-align: center;
+    color: var(--primary-light);
     text-decoration: none;
-    border-radius: 10px;
-    font-weight: 700;
+    margin-top: 1rem;
+    font-weight: 600;
     transition: all 0.3s ease;
   }
 
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 200, 150, 0.4);
+  .btn-seguir-comprando {
+    background: rgba(147, 51, 234, 0.2);
+    border: 2px solid var(--accent);
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    color: var(--accent-light);
+    font-size: 1.1rem;
+  }
+
+  .btn-seguir-comprando:hover,
+  .btn-seguir-comprando-link:hover {
+    color: var(--primary);
+    transform: translateX(5px);
   }
 
   /* Notificaciones */
-  .notificacion {
+  .notificacion-carrito {
     position: fixed;
     top: 100px;
-    right: 20px;
+    right: -400px;
+    background: linear-gradient(135deg, rgba(0, 200, 150, 0.95), rgba(110, 231, 183, 0.95));
+    backdrop-filter: blur(10px);
     padding: 1rem 1.5rem;
-    border-radius: 10px;
-    font-weight: 600;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    transition: right 0.3s ease;
     z-index: 10000;
-    transform: translateX(400px);
-    transition: transform 0.3s ease;
+    min-width: 300px;
+    max-width: 400px;
   }
 
-  .notificacion.show {
-    transform: translateX(0);
+  .notificacion-carrito.show {
+    right: 20px;
   }
 
-  .notif-success {
-    background: linear-gradient(135deg, #4caf50, #388e3c);
+  .notificacion-carrito.notif-info {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.95), rgba(147, 197, 253, 0.95));
+  }
+
+  .notif-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
     color: white;
   }
 
-  .notif-info {
-    background: linear-gradient(135deg, #2196f3, #1976d2);
+  .notif-mensaje {
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .notif-close {
+    background: rgba(255, 255, 255, 0.3);
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5rem;
     color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
   }
 
-  /* Responsive */
-  @media (max-width: 1024px) {
-    .carrito-contenido {
-      grid-template-columns: 1fr;
-    }
-
-    .resumen-carrito {
-      position: static;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .carrito-page {
-      padding: 1rem;
-    }
-
-    .carrito-header {
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .carrito-header h1 {
-      font-size: 2rem;
-    }
-
-    .producto-carrito {
-      grid-template-columns: 80px 1fr;
-      gap: 1rem;
-    }
-
-    .producto-imagen {
-      width: 80px;
-      height: 80px;
-    }
-
-    .producto-cantidad,
-    .producto-subtotal,
-    .btn-eliminar {
-      grid-column: 1 / -1;
-      justify-self: stretch;
-    }
-
-    .producto-cantidad {
-      justify-content: center;
-    }
+  .notif-close:hover {
+    background: rgba(255, 255, 255, 0.5);
+    transform: scale(1.1);
   }
 </style>

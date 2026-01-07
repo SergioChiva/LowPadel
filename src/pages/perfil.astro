@@ -241,8 +241,8 @@ import Layout from '../layouts/Layout.astro';
     // Mostrar información del usuario
     cargarDatosUsuario();
 
-    // Cargar pedidos
-    cargarPedidos(usuario.pedidos || []);
+    // Cargar pedidos desde la API
+    cargarPedidosDesdeAPI();
 
     // === NAVEGACIÓN POR PESTAÑAS ===
     const tabBtns = document.querySelectorAll('.tab-btn');
@@ -411,6 +411,34 @@ import Layout from '../layouts/Layout.astro';
     }
   });
 
+  async function cargarPedidosDesdeAPI() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      cargarPedidos([]);
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/pedidos', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      const data = await response.json();
+
+      if (data.success && data.pedidos) {
+        cargarPedidos(data.pedidos);
+      } else {
+        cargarPedidos([]);
+      }
+    } catch (error) {
+      console.error('Error al cargar pedidos:', error);
+      cargarPedidos([]);
+    }
+  }
+
   function cargarPedidos(pedidos) {
     const listaPedidos = document.getElementById('listaPedidos');
     
@@ -430,12 +458,16 @@ import Layout from '../layouts/Layout.astro';
       return;
     }
 
-    listaPedidos.innerHTML = pedidos.map(pedido => `
+    listaPedidos.innerHTML = pedidos.map(pedido => {
+      const fecha = new Date(pedido.fecha || pedido.createdAt);
+      const pedidoId = pedido._id || pedido.id;
+      
+      return `
       <div class="pedido-card pedido-${pedido.estado}">
         <div class="pedido-status-badge">
           <span class="estado estado-${pedido.estado}">
             ${getEstadoIcon(pedido.estado)}
-            ${pedido.estado}
+            ${pedido.estado.toUpperCase()}
           </span>
         </div>
         <div class="pedido-content">
@@ -446,15 +478,24 @@ import Layout from '../layouts/Layout.astro';
                   <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
                   <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
                 </svg>
-                Pedido #${pedido.id}
+                Pedido #${pedidoId.slice(-8).toUpperCase()}
               </h3>
               <p class="pedido-fecha">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <circle cx="12" cy="12" r="10"></circle>
                   <polyline points="12 6 12 12 16 14"></polyline>
                 </svg>
-                ${new Date(pedido.fecha).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
+                ${fecha.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
               </p>
+              ${pedido.direccionEnvio ? `
+                <p class="pedido-direccion">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                  ${pedido.direccionEnvio.ciudad}, ${pedido.direccionEnvio.codigoPostal}
+                </p>
+              ` : ''}
             </div>
           </div>
           
@@ -465,25 +506,40 @@ import Layout from '../layouts/Layout.astro';
                 <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
                 <line x1="12" y1="22.08" x2="12" y2="12"></line>
               </svg>
-              Productos
+              Productos (${pedido.productos.length})
             </h4>
             ${pedido.productos.map(p => `
               <div class="producto-item">
-                <span class="producto-nombre">• ${p.nombre}</span>
-                <span class="precio">${p.precio}€</span>
+                <div class="producto-detalle">
+                  <span class="producto-nombre">• ${p.nombre}</span>
+                  ${p.jugador ? `<span class="producto-jugador">${p.jugador}</span>` : ''}
+                  ${p.cantidad > 1 ? `<span class="producto-cantidad">x${p.cantidad}</span>` : ''}
+                </div>
+                <span class="precio">${(p.precio * (p.cantidad || 1)).toFixed(2)}€</span>
               </div>
             `).join('')}
           </div>
           
           <div class="pedido-footer">
+            <div class="pedido-desglose">
+              <div class="desglose-linea">
+                <span>Subtotal:</span>
+                <span>${pedido.subtotal ? pedido.subtotal.toFixed(2) : '0.00'}€</span>
+              </div>
+              <div class="desglose-linea">
+                <span>Envío:</span>
+                <span>${pedido.envio ? pedido.envio.toFixed(2) : '5.00'}€</span>
+              </div>
+            </div>
             <div class="pedido-total">
               <span>Total del pedido</span>
-              <strong>${pedido.total}€</strong>
+              <strong>${pedido.total.toFixed(2)}€</strong>
             </div>
           </div>
         </div>
       </div>
-    `).join('');
+    `;
+    }).join('');
   }
   
   function getEstadoIcon(estado) {
@@ -966,8 +1022,26 @@ import Layout from '../layouts/Layout.astro';
     border-bottom: none;
   }
 
+  .producto-detalle {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
   .producto-nombre {
     font-size: 0.95rem;
+  }
+
+  .producto-jugador {
+    font-size: 0.85rem;
+    color: var(--primary);
+    opacity: 0.8;
+  }
+
+  .producto-cantidad {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    opacity: 0.6;
   }
 
   .producto-item .precio {
@@ -976,10 +1050,34 @@ import Layout from '../layouts/Layout.astro';
     font-size: 1.1rem;
   }
 
+  .pedido-direccion {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    opacity: 0.7;
+    margin-top: 0.5rem;
+  }
+
   .pedido-footer {
     margin-top: 1.5rem;
     padding-top: 1.5rem;
     border-top: 2px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .pedido-desglose {
+    margin-bottom: 1rem;
+    padding: 0.5rem 0;
+  }
+
+  .desglose-linea {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.4rem 0;
+    color: var(--text-light);
+    opacity: 0.8;
+    font-size: 0.95rem;
   }
 
   .pedido-total {

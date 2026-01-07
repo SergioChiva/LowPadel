@@ -1,0 +1,128 @@
+/* Estilos para el componente de noticias */
+
+.noticias-container {
+    max-width: 1200px;
+    margin: 60px auto;
+    padding: 20px;
+    color: white;
+}
+
+.noticias-titulo-principal {
+    text-align: center;
+    font-size: 3.5rem;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #00c896, #6ee7b7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.noticias-subtitle {
+    text-align: center;
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 50px;
+}
+
+.noticias-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    max-width: 850px;
+    margin: 0 auto;
+}
+
+.noticia-card {
+    background: linear-gradient(135deg, rgba(15, 30, 50, 0.98), rgba(10, 20, 40, 0.98));
+    border: 3px solid #00c896;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 35px rgba(0, 200, 150, 0.4);
+}
+
+.noticia-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 18px 50px rgba(0, 200, 150, 0.6);
+    border-color: #6ee7b7;
+}
+
+.noticia-imagen {
+    width: 100% !important;
+    height: 200px !important;
+    max-height: 200px !important;
+    min-height: 200px !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.noticia-contenido {
+    padding: 30px;
+}
+
+.noticia-titulo {
+    font-size: 1.5rem;
+    color: #00c896;
+    margin: 0 0 15px 0;
+    font-weight: bold;
+    line-height: 1.4;
+}
+
+.noticia-resumen {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 20px;
+}
+
+.noticia-meta {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    border-top: 1px solid rgba(0, 200, 150, 0.3);
+    padding-top: 15px;
+}
+
+.noticia-fecha {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.loading,
+.sin-noticias {
+    text-align: center;
+    padding: 80px 20px;
+    font-size: 1.3rem;
+    color: #00c896;
+}
+
+@media (max-width: 768px) {
+    .noticias-titulo-principal {
+        font-size: 2.5rem;
+    }
+    
+    .noticias-grid {
+        gap: 30px;
+        padding: 0 10px;
+    }
+    
+    .noticia-imagen {
+        height: 180px !important;
+        max-height: 180px !important;
+        min-height: 180px !important;
+    }
+    
+    .noticia-titulo {
+        font-size: 1.3rem;
+    }
+    
+    .noticia-contenido {
+        padding: 25px;
+    }
+}
