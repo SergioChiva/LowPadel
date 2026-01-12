@@ -6,6 +6,12 @@ async function cargarPalasDesdeAPI() {
         const response = await fetch('/api/palas');
         const data = await response.json();
         
+        console.log('Respuesta de la API:', data);
+        console.log('Número de palas:', data.palas?.length);
+        if (data.palas?.length > 0) {
+            console.log('Primera pala:', data.palas[0]);
+        }
+        
         if (!data.success || data.palas.length === 0) {
             main.innerHTML = '<p style="text-align: center; color: white; font-size: 1.5rem;">No hay palas disponibles</p>';
             return;
@@ -43,7 +49,7 @@ async function cargarPalasDesdeAPI() {
             // Título del jugador más limpio
             divJugador.innerHTML = `<h2 class="titulo-jugador">${datos.nombre}</h2>`;
 
-            // **NUEVO:** Contenedor para las palas (usaremos CSS Grid aquí)
+            // Contenedor para las palas
             let palasContainer = document.createElement("div");
             palasContainer.classList.add("palas-container"); 
 
@@ -54,7 +60,7 @@ async function cargarPalasDesdeAPI() {
                 // Estructura de la tarjeta mejorada
                 card.innerHTML = `
                     <div class="imagen-wrapper">
-                        <img src="${info.imagen}" alt="${info.nombrePala}">
+                        <img src="${info.imagen}" alt="${info.nombrePala}" onerror="console.error('Error cargando imagen:', '${info.imagen}'); this.src='/Layout/logo.png';">
                     </div>
                     <div class="info-pala">
                         <h3 class="nombre-pala">${info.nombrePala}</h3>
