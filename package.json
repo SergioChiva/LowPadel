@@ -1,7 +1,8 @@
 {
   "name": "lowpadel",
   "type": "module",
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "description": "E-commerce moderno de palas de pádel premium con MongoDB, JWT y diseño glassmorphism",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -16,9 +17,16 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.0.2"
   },
-  "description": "```sh npm create astro@latest -- --template basics ```",
-  "main": "index.js",
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "keywords": [
+    "padel",
+    "ecommerce",
+    "astro",
+    "mongodb",
+    "tienda-online"
+  ],
+  "author": "LowPádel Team",
+  "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0"
+  }
 }

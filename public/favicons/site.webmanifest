@@ -1,0 +1,27 @@
+{
+  "name": "LowPádel - Tienda de Palas Premium",
+  "short_name": "LowPádel",
+  "description": "Tienda online de palas de pádel de jugadores profesionales",
+  "icons": [
+    {
+      "src": "/favicons/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicons/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#00c896",
+  "background_color": "#0f172a",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/"
+}
