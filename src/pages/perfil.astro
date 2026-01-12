@@ -462,15 +462,93 @@ import Layout from '../layouts/Layout.astro';
       const fecha = new Date(pedido.fecha || pedido.createdAt);
       const pedidoId = pedido._id || pedido.id;
       
+      // Estilos inline según el estado
+      const colorStyles = {
+        'pendiente': {
+          border: '4px solid #ffc107',
+          borderLeft: '8px solid #ffc107',
+          background: 'linear-gradient(135deg, rgba(255, 193, 7, 0.25), rgba(255, 152, 0, 0.15))',
+          badgeColor: '#ffeb3b',
+          badgeBg: 'linear-gradient(135deg, rgba(255, 193, 7, 0.4), rgba(255, 152, 0, 0.4))',
+          badgeBorder: '#ffc107'
+        },
+        'procesando': {
+          border: '4px solid #2196f3',
+          borderLeft: '8px solid #2196f3',
+          background: 'linear-gradient(135deg, rgba(33, 150, 243, 0.25), rgba(3, 169, 244, 0.15))',
+          badgeColor: '#64b5f6',
+          badgeBg: 'linear-gradient(135deg, rgba(33, 150, 243, 0.4), rgba(3, 169, 244, 0.4))',
+          badgeBorder: '#2196f3'
+        },
+        'enviado': {
+          border: '4px solid #9c27b0',
+          borderLeft: '8px solid #9c27b0',
+          background: 'linear-gradient(135deg, rgba(156, 39, 176, 0.25), rgba(123, 31, 162, 0.15))',
+          badgeColor: '#ce93d8',
+          badgeBg: 'linear-gradient(135deg, rgba(156, 39, 176, 0.4), rgba(123, 31, 162, 0.4))',
+          badgeBorder: '#9c27b0'
+        },
+        'entregado': {
+          border: '4px solid #4caf50',
+          borderLeft: '8px solid #4caf50',
+          background: 'linear-gradient(135deg, rgba(76, 175, 80, 0.25), rgba(56, 142, 60, 0.15))',
+          badgeColor: '#81c784',
+          badgeBg: 'linear-gradient(135deg, rgba(76, 175, 80, 0.4), rgba(56, 142, 60, 0.4))',
+          badgeBorder: '#4caf50'
+        },
+        'cancelado': {
+          border: '4px solid #f44336',
+          borderLeft: '8px solid #f44336',
+          background: 'linear-gradient(135deg, rgba(244, 67, 54, 0.25), rgba(229, 57, 53, 0.15))',
+          badgeColor: '#ef9a9a',
+          badgeBg: 'linear-gradient(135deg, rgba(244, 67, 54, 0.4), rgba(229, 57, 53, 0.4))',
+          badgeBorder: '#f44336'
+        }
+      };
+      
+      const styles = colorStyles[pedido.estado] || colorStyles['pendiente'];
+      
       return `
-      <div class="pedido-card pedido-${pedido.estado}">
-        <div class="pedido-status-badge">
-          <span class="estado estado-${pedido.estado}">
+      <div class="pedido-card pedido-${pedido.estado}" style="
+        position: relative;
+        background: ${styles.background};
+        backdrop-filter: blur(15px);
+        border: ${styles.border};
+        border-left: ${styles.borderLeft};
+        border-radius: 20px;
+        margin-bottom: 2rem;
+        overflow: hidden;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        transition: all 0.4s ease;
+      ">
+        <div class="pedido-status-badge" style="
+          padding: 1.2rem 1.5rem;
+          background: rgba(0, 0, 0, 0.4);
+          border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        ">
+          <span class="estado estado-${pedido.estado}" style="
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: ${styles.badgeBg};
+            color: ${styles.badgeColor};
+            border: 2px solid ${styles.badgeBorder};
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+          ">
             ${getEstadoIcon(pedido.estado)}
             ${pedido.estado.toUpperCase()}
           </span>
         </div>
-        <div class="pedido-content">
+        <div class="pedido-content" style="padding: 2rem;">
           <div class="pedido-header">
             <div class="pedido-info">
               <h3>
@@ -499,8 +577,23 @@ import Layout from '../layouts/Layout.astro';
             </div>
           </div>
           
-          <div class="pedido-productos">
-            <h4>
+          <div class="pedido-productos" style="
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+          ">
+            <h4 style="
+              display: flex;
+              align-items: center;
+              gap: 0.5rem;
+              color: var(--primary);
+              font-size: 1rem;
+              margin-bottom: 1rem;
+              font-weight: 600;
+            ">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
                 <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
@@ -857,114 +950,139 @@ import Layout from '../layouts/Layout.astro';
   }
 
   /* Pedidos */
+  #listaPedidos {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2rem !important;
+  }
+
   .pedido-card {
-    position: relative;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    margin-bottom: 1.5rem;
-    overflow: hidden;
-    transition: all 0.4s ease;
+    position: relative !important;
+    background: linear-gradient(135deg, rgba(15, 20, 45, 0.95), rgba(10, 14, 35, 0.9)) !important;
+    backdrop-filter: blur(15px) !important;
+    border: 3px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 20px !important;
+    margin-bottom: 0 !important;
+    overflow: hidden !important;
+    transition: all 0.4s ease !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5) !important;
   }
 
   .pedido-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+    transform: translateY(-8px) !important;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6) !important;
   }
 
-  /* Colores de fondo según estado */
+  /* Colores de fondo y borde según estado */
   .pedido-pendiente {
-    background: linear-gradient(135deg, rgba(255, 193, 7, 0.15), rgba(255, 152, 0, 0.08));
-    border-color: rgba(255, 193, 7, 0.3);
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.25), rgba(255, 152, 0, 0.15)) !important;
+    border-color: #ffc107 !important;
+    border-width: 4px !important;
+    border-left-width: 8px !important;
   }
   .pedido-pendiente:hover {
-    box-shadow: 0 12px 35px rgba(255, 193, 7, 0.3);
+    box-shadow: 0 15px 45px rgba(255, 193, 7, 0.5), 0 0 30px rgba(255, 193, 7, 0.3) !important;
+    border-color: #ffca28 !important;
   }
 
   .pedido-procesando {
-    background: linear-gradient(135deg, rgba(33, 150, 243, 0.15), rgba(3, 169, 244, 0.08));
-    border-color: rgba(33, 150, 243, 0.3);
+    background: linear-gradient(135deg, rgba(33, 150, 243, 0.25), rgba(3, 169, 244, 0.15)) !important;
+    border-color: #2196f3 !important;
+    border-width: 4px !important;
+    border-left-width: 8px !important;
   }
   .pedido-procesando:hover {
-    box-shadow: 0 12px 35px rgba(33, 150, 243, 0.3);
+    box-shadow: 0 15px 45px rgba(33, 150, 243, 0.5), 0 0 30px rgba(33, 150, 243, 0.3) !important;
+    border-color: #42a5f5 !important;
   }
 
   .pedido-enviado {
-    background: linear-gradient(135deg, rgba(156, 39, 176, 0.15), rgba(123, 31, 162, 0.08));
-    border-color: rgba(156, 39, 176, 0.3);
+    background: linear-gradient(135deg, rgba(156, 39, 176, 0.25), rgba(123, 31, 162, 0.15)) !important;
+    border-color: #9c27b0 !important;
+    border-width: 4px !important;
+    border-left-width: 8px !important;
   }
   .pedido-enviado:hover {
-    box-shadow: 0 12px 35px rgba(156, 39, 176, 0.3);
+    box-shadow: 0 15px 45px rgba(156, 39, 176, 0.5), 0 0 30px rgba(156, 39, 176, 0.3) !important;
+    border-color: #ab47bc !important;
   }
 
   .pedido-entregado {
-    background: linear-gradient(135deg, rgba(76, 175, 80, 0.15), rgba(56, 142, 60, 0.08));
-    border-color: rgba(76, 175, 80, 0.3);
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.25), rgba(56, 142, 60, 0.15)) !important;
+    border-color: #4caf50 !important;
+    border-width: 4px !important;
+    border-left-width: 8px !important;
   }
   .pedido-entregado:hover {
-    box-shadow: 0 12px 35px rgba(76, 175, 80, 0.3);
+    box-shadow: 0 15px 45px rgba(76, 175, 80, 0.5), 0 0 30px rgba(76, 175, 80, 0.3) !important;
+    border-color: #66bb6a !important;
   }
 
   .pedido-cancelado {
-    background: linear-gradient(135deg, rgba(244, 67, 54, 0.15), rgba(229, 57, 53, 0.08));
-    border-color: rgba(244, 67, 54, 0.3);
+    background: linear-gradient(135deg, rgba(244, 67, 54, 0.25), rgba(229, 57, 53, 0.15)) !important;
+    border-color: #f44336 !important;
+    border-width: 4px !important;
+    border-left-width: 8px !important;
   }
   .pedido-cancelado:hover {
-    box-shadow: 0 12px 35px rgba(244, 67, 54, 0.3);
+    box-shadow: 0 15px 45px rgba(244, 67, 54, 0.5), 0 0 30px rgba(244, 67, 54, 0.3) !important;
+    border-color: #ef5350 !important;
   }
 
   .pedido-status-badge {
-    padding: 1rem 1.5rem;
-    background: rgba(0, 0, 0, 0.2);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1.2rem 1.5rem !important;
+    background: rgba(0, 0, 0, 0.4) !important;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.15) !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
   }
 
   .pedido-content {
-    padding: 1.5rem;
+    padding: 2rem !important;
   }
 
   .estado {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.6rem 1.2rem;
-    border-radius: 25px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.6rem !important;
+    padding: 0.8rem 1.5rem !important;
+    border-radius: 30px !important;
+    font-size: 0.9rem !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
   }
 
   .estado-pendiente { 
-    background: linear-gradient(135deg, rgba(255, 193, 7, 0.3), rgba(255, 152, 0, 0.3)); 
-    color: #ffc107; 
-    border: 2px solid rgba(255, 193, 7, 0.5);
-    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.2);
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.4), rgba(255, 152, 0, 0.4)) !important; 
+    color: #ffeb3b !important; 
+    border: 2px solid #ffc107 !important;
+    box-shadow: 0 4px 20px rgba(255, 193, 7, 0.4) !important;
   }
   .estado-procesando { 
-    background: linear-gradient(135deg, rgba(33, 150, 243, 0.3), rgba(3, 169, 244, 0.3)); 
-    color: #2196f3; 
-    border: 2px solid rgba(33, 150, 243, 0.5);
-    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.2);
+    background: linear-gradient(135deg, rgba(33, 150, 243, 0.4), rgba(3, 169, 244, 0.4)) !important; 
+    color: #64b5f6 !important; 
+    border: 2px solid #2196f3 !important;
+    box-shadow: 0 4px 20px rgba(33, 150, 243, 0.4) !important;
   }
   .estado-enviado { 
-    background: linear-gradient(135deg, rgba(156, 39, 176, 0.3), rgba(123, 31, 162, 0.3)); 
-    color: #ba68c8; 
-    border: 2px solid rgba(156, 39, 176, 0.5);
-    box-shadow: 0 4px 15px rgba(156, 39, 176, 0.2);
+    background: linear-gradient(135deg, rgba(156, 39, 176, 0.4), rgba(123, 31, 162, 0.4)) !important; 
+    color: #ce93d8 !important; 
+    border: 2px solid #9c27b0 !important;
+    box-shadow: 0 4px 20px rgba(156, 39, 176, 0.4) !important;
   }
   .estado-entregado { 
-    background: linear-gradient(135deg, rgba(76, 175, 80, 0.3), rgba(56, 142, 60, 0.3)); 
-    color: #4caf50; 
-    border: 2px solid rgba(76, 175, 80, 0.5);
-    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.4), rgba(56, 142, 60, 0.4)) !important; 
+    color: #81c784 !important; 
+    border: 2px solid #4caf50 !important;
+    box-shadow: 0 4px 20px rgba(76, 175, 80, 0.4) !important;
   }
   .estado-cancelado { 
-    background: linear-gradient(135deg, rgba(244, 67, 54, 0.3), rgba(229, 57, 53, 0.3)); 
-    color: #ef5350; 
-    border: 2px solid rgba(244, 67, 54, 0.5);
-    box-shadow: 0 4px 15px rgba(244, 67, 54, 0.2);
+    background: linear-gradient(135deg, rgba(244, 67, 54, 0.4), rgba(229, 57, 53, 0.4)) !important; 
+    color: #ef9a9a !important; 
+    border: 2px solid #f44336 !important;
+    box-shadow: 0 4px 20px rgba(244, 67, 54, 0.4) !important;
   }
 
   .pedido-header {
@@ -992,11 +1110,12 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .pedido-productos {
-    margin: 1.5rem 0;
-    padding: 1.2rem;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin: 1.5rem 0 !important;
+    padding: 1.5rem !important;
+    background: rgba(0, 0, 0, 0.4) !important;
+    border-radius: 15px !important;
+    border: 2px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3) !important;
   }
 
   .pedido-productos h4 {
